@@ -5,6 +5,12 @@ density.dist_default <- function(x, ...){
             class(x)[1])
   )
 }
+
+#' @export
+log_density.dist_default <- function(x, ...){
+  log(density(x, ...))
+}
+
 #' @export
 quantile.dist_default <- function(x, p, ...){
   # abort(
@@ -16,6 +22,10 @@ quantile.dist_default <- function(x, p, ...){
   })$par
 }
 #' @export
+log_quantile.dist_default <- function(x, p, ...){
+  quantile(x, exp(p), ...)
+}
+#' @export
 cdf.dist_default <- function(x, ...){
   abort(
     sprintf("The distribution class `%s` does not support `cdf()`",
@@ -23,9 +33,25 @@ cdf.dist_default <- function(x, ...){
   )
 }
 #' @export
+log_cdf.dist_default <- function(x, q, ...){
+  log(cdf(x, q, ...))
+}
+
+#' @export
 generate.dist_default <- function(x, times, ...){
   vapply(stats::runif(times,0,1), quantile, numeric(1L), x = x, ...)
 }
+
+#' @export
+likelihood.dist_default <- function(x, sample, ...){
+  prod(vapply(sample, density, numeric(1L), x = x))
+}
+
+#' @export
+log_likelihood.dist_default <- function(x, sample, ...){
+  sum(vapply(sample, log_density, numeric(1L), x = x))
+}
+
 #' @export
 mean.dist_default <- function(x, ...){
   mean(generate(x, times = 1000), na.rm = TRUE)

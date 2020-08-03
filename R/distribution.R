@@ -50,12 +50,24 @@ dimnames.distribution <- function(x){
 #' @param x The distribution(s).
 #' @param at The point at which to compute the density/mass.
 #' @param ... Additional arguments passed to methods.
+#' @param log If `TRUE`, probabilities will be given as log probabilities.
 #'
 #' @importFrom stats density
 #' @export
-density.distribution <- function(x, at, ...){
+density.distribution <- function(x, at, ..., log = FALSE){
+  if(log) return(log_density(x, at, ...))
   vec_is(at, double(), 1L)
   dist_apply(x, density, at = at, ...)
+}
+
+log_density <- function(x, at, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("log_density")
+}
+#' @export
+log_density.distribution <- function(x, at, ...){
+  vec_is(at, double(), 1L)
+  dist_apply(x, log_density, at = at, ...)
 }
 
 #' Distribution Quantiles
@@ -64,28 +76,38 @@ density.distribution <- function(x, at, ...){
 #'
 #' Computes the quantiles of a distribution.
 #'
-#' @param x The distribution(s).
+#' @inheritParams density.distribution
 #' @param p The probability of the quantile.
 #' @param ... Additional arguments passed to methods.
 #'
 #' @importFrom stats quantile
 #' @export
-quantile.distribution <- function(x, p, ...){
+quantile.distribution <- function(x, p, ..., log = FALSE){
+  if(log) return(log_quantile(x, p, ...))
   vec_is(p, double(), 1L)
   dist_apply(x, quantile, p = p, ...)
+}
+log_quantile <- function(x, q, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("log_quantile")
+}
+#' @export
+log_quantile.distribution <- function(x, p, ...){
+  vec_is(q, double(), 1L)
+  dist_apply(x, log_quantile, p = p, ...)
 }
 
 #' The cumulative distribution function
 #'
 #' \lifecycle{stable}
 #'
-#' @param x The distribution(s).
+#' @inheritParams density.distribution
 #' @param q The quantile at which the cdf is calculated.
-#' @param ... Additional arguments used by methods.
 #'
 #' @name cdf
 #' @export
-cdf <- function (x, q, ...){
+cdf <- function (x, q, ..., log = FALSE){
+  if(log) return(log_cdf(x, q, ...))
   ellipsis::check_dots_used()
   UseMethod("cdf")
 }
@@ -94,6 +116,15 @@ cdf <- function (x, q, ...){
 cdf.distribution <- function(x, q, ...){
   vec_is(q, double(), 1L)
   dist_apply(x, cdf, q = q, ...)
+}
+log_cdf <- function(x, q, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("log_cdf")
+}
+#' @export
+log_cdf.distribution <- function(x, q, ...){
+  vec_is(q, double(), 1L)
+  dist_apply(x, log_cdf, q = q, ...)
 }
 
 #' Randomly sample values from a distribution
@@ -113,6 +144,46 @@ generate.distribution <- function(x, times, ...){
   mapply(generate, vec_data(x), times = times, ..., SIMPLIFY = FALSE)
   # dist_apply(x, generate, times = times, ...)
   # Needs work to structure MV appropriately.
+}
+
+#' The (log) likelihood of a sample matching a distribution
+#'
+#' \lifecycle{maturing}
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @name likelihood
+#' @export
+likelihood <- function (x, ...){
+  ellipsis::check_dots_used()
+  UseMethod("likelihood")
+}
+
+#' @rdname likelihood
+#' @param sample A list of sampled values to compare to distribution(s).
+#' @param log If `TRUE`, the log-likelihood will be computed.
+#' @export
+likelihood.distribution <- function(x, sample, ..., log = FALSE){
+  if(vec_is(sample, numeric())) {
+    warn("The `sample` argument of `likelihood()` should contain a list of numbers.
+The same sample will be used for each distribution, i.e. `sample = list(sample)`.")
+    sample <- list(sample)
+  }
+  if(log){
+    dist_apply(x, log_likelihood, sample = sample, ...)
+  } else {
+    dist_apply(x, likelihood, sample = sample, ...)
+  }
+}
+
+log_likelihood <- function(x, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("log_likelihood")
+}
+#' @export
+log_likelihood.distribution <- function(x, sample, ...){
+  dist_apply(x, log_likelihood, sample = sample, ...)
 }
 
 #' Mean of a probability distribution
@@ -153,8 +224,8 @@ variance.default <- function(x, ...){
 #'
 #' \lifecycle{stable}
 #'
-#' Returns the empirical mean of the probability distribution. If the method
-#' does not exist, the mean of a random sample will be returned.
+#' Returns the empirical variance of the probability distribution. If the method
+#' does not exist, the variance of a random sample will be returned.
 #'
 #' @param x The distribution(s).
 #' @param ... Additional arguments used by methods.
@@ -162,6 +233,42 @@ variance.default <- function(x, ...){
 #' @export
 variance.distribution <- function(x, ...){
   dist_apply(x, variance, ...)
+}
+
+#' Skewness of a probability distribution
+#'
+#' \lifecycle{stable}
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @export
+skewness <- function(x, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("skewness")
+}
+#' @rdname skewness
+#' @export
+skewness.distribution <- function(x, ...){
+  dist_apply(x, skewness, ...)
+}
+
+#' Kurtosis of a probability distribution
+#'
+#' \lifecycle{stable}
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @export
+kurtosis <- function(x, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("kurtosis")
+}
+#' @rdname kurtosis
+#' @export
+kurtosis.distribution <- function(x, ...){
+  dist_apply(x, kurtosis, ...)
 }
 
 #' Median of a probability distribution
@@ -247,7 +354,7 @@ hdr.distribution <- function(x, size = 95, n = 512, ...){
 
 #' @export
 sum.distribution <- function(x, ...){
-  Reduce("+", x)
+  vec_restore(list(Reduce("+", x)), x)
 }
 
 #' @method vec_arith distribution
@@ -318,3 +425,7 @@ vec_cast.distribution.double <- function(x, to, ...){
 }
 #' @export
 vec_cast.distribution.integer <- vec_cast.distribution.double
+#' @export
+vec_cast.character.distribution <- function(x, to, ...){
+  format(x)
+}

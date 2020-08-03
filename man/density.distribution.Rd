@@ -4,7 +4,7 @@
 \alias{density.distribution}
 \title{The probability density/mass function}
 \usage{
-\method{density}{distribution}(x, at, ...)
+\method{density}{distribution}(x, at, ..., log = FALSE)
 }
 \arguments{
 \item{x}{The distribution(s).}
@@ -12,6 +12,8 @@
 \item{at}{The point at which to compute the density/mass.}
 
 \item{...}{Additional arguments passed to methods.}
+
+\item{log}{If \code{TRUE}, probabilities will be given as log probabilities.}
 }
 \description{
 \lifecycle{stable}

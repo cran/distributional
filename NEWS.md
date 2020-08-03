@@ -1,3 +1,39 @@
+# distributional 0.2.0
+
+## New features
+
+### Probability distributions
+
+* Added `dist_wrap()` for wrapping distributions not yet added in the package.
+
+### Methods
+
+* Added `likelihood()` for computing the likelihood of observing a sample from a
+  distribution.
+* Added `skewness()` for computing the skewness of a distribution.
+* Added `kurtosis()` for computing the kurtosis of a distribution.
+* The `density()`, `cdf()` and `quantile()` methods now accept a `log` argument 
+  which will use/return probabilities as log probabilities.
+  
+## Improvements
+
+* Improved documentation for most distributions to include equations for the
+  region of support, summary statistics, density functions and moments. This is
+  the work of @alexpghayes in the `distributions3` package.
+* Documentation improvements
+* Added support for displaying distributions with `View()`.
+* `hilo()` intervals can no longer be added to other intervals, as this is a
+  common mistake when aggregating forecasts.
+* Incremented `d` for `numDeriv::hessian()` when computing mean and variance of 
+  transformed distributions.
+  
+## Deprecated features
+
+* Graphics functionality provided by `autoplot.distribution()` is now deprecated
+  in favour of using the `ggdist` package. The `ggdist` package allows 
+  distributions produced by distributional to be used directly with ggplot2 as
+  aesthetics.
+  
 # distributional 0.1.0
 
 First release. 

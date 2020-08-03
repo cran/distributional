@@ -1,7 +1,7 @@
 dist <- c(dist_normal(0, 1), dist_beta(5, 1))
 
 test_that("autoplot.distribution pdf", {
-  p <- autoplot(dist, type = "pdf")
+  p <- rlang::with_options(lifecycle_verbosity = "quiet", autoplot(dist, type = "pdf"))
   expect_silent(print(p))
   expect_length(
     ggplot2::layer_data(p)$y,
@@ -25,7 +25,7 @@ test_that("autoplot.distribution pdf", {
 })
 
 test_that("autoplot.distribution cdf", {
-  p <- autoplot(dist, type = "cdf")
+  p <- rlang::with_options(lifecycle_verbosity = "quiet", autoplot(dist, type = "cdf"))
   expect_silent(print(p))
   expect_length(
     ggplot2::layer_data(p)$y,

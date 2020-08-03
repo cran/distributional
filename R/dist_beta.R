@@ -7,7 +7,22 @@
 #' @seealso [stats::Beta]
 #'
 #' @examples
-#' dist_beta(shape1 = c(0.5, 5, 1, 2, 2), shape2 = c(0.5, 1, 3, 2, 5))
+#' dist <- dist_beta(shape1 = c(0.5, 5, 1, 2, 2), shape2 = c(0.5, 1, 3, 2, 5))
+#'
+#' dist
+#' mean(dist)
+#' variance(dist)
+#' skewness(dist)
+#' kurtosis(dist)
+#'
+#' generate(dist, 10)
+#'
+#' density(dist, 2)
+#' density(dist, 2, log = TRUE)
+#'
+#' cdf(dist, 4)
+#'
+#' quantile(dist, 0.7)
 #'
 #' @name dist_beta
 #' @export
@@ -40,6 +55,11 @@ density.dist_beta <- function(x, at, ...){
 }
 
 #' @export
+log_density.dist_beta <- function(x, at, ...){
+  stats::dbeta(at, x[["shape1"]], x[["shape2"]], log = TRUE)
+}
+
+#' @export
 quantile.dist_beta <- function(x, p, ...){
   stats::qbeta(p, x[["shape1"]], x[["shape2"]])
 }
@@ -64,4 +84,20 @@ variance.dist_beta <- function(x, ...){
   a <- x[["shape1"]]
   b <- x[["shape2"]]
   a*b/((a+b)^2*(a+b+1))
+}
+
+#' @export
+skewness.dist_beta <- function(x, ...) {
+  a <- x[["shape1"]]
+  b <- x[["shape2"]]
+  2 * (b - a) * sqrt(a + b + 1) / (a + b + 2) * sqrt(a * b)
+}
+
+#' @export
+kurtosis.dist_beta <- function(x, ...) {
+  a <- x[["shape1"]]
+  b <- x[["shape2"]]
+  num <- 6 * ((a - b)^2 * (a + b + 1) - (a * b) * (a + b + 2))
+  denom <- a * b * (a + b + 2) * (a + b + 3)
+  num / denom
 }
