@@ -1,3 +1,35 @@
+# distributional 0.2.1
+
+A small performance and methods release. Some issues with truncated
+distributions have been fixed, and some more distribution methods have been
+added which improve performance of common tasks.
+
+## New features
+
+### Probability distributions
+
+* Added `dist_missing()` for representing unknown or missing (NA) distributions.
+
+## Improvements
+
+* Documentation improvements.
+* Added `cdf()` method for `dist_sample()` which uses the emperical cdf.
+* `dist_mixture()` now preserves `dimnames()` if all distributions have the same
+  `dimnames()`.
+* Added `density()` and `generate()` methods for sample distributions.
+* Added `skewness()` method for `dist_sample()`.
+* Improved performance for truncated Normal and sample distributions (#49).
+* Improved vectorisation of distribution methods.
+
+## Bug fixes
+
+* Fixed issue with computing the median of `dist_truncated()` distributions.
+* Fixed format method for `dist_truncated()` distributions with no upper or 
+  lower limit.
+* Fixed issue with naming <hilo> objects giving an invalid structure. It now
+  gives an informative error (#23).
+* Fixed documentation for Negative Binomial distribution (#46).
+
 # distributional 0.2.0
 
 ## New features

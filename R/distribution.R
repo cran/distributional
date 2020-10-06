@@ -56,7 +56,7 @@ dimnames.distribution <- function(x){
 #' @export
 density.distribution <- function(x, at, ..., log = FALSE){
   if(log) return(log_density(x, at, ...))
-  vec_is(at, double(), 1L)
+  vec_assert(at, size = 1L)
   dist_apply(x, density, at = at, ...)
 }
 
@@ -66,7 +66,7 @@ log_density <- function(x, at, ...) {
 }
 #' @export
 log_density.distribution <- function(x, at, ...){
-  vec_is(at, double(), 1L)
+  vec_assert(at, size = 1L)
   dist_apply(x, log_density, at = at, ...)
 }
 
@@ -84,7 +84,7 @@ log_density.distribution <- function(x, at, ...){
 #' @export
 quantile.distribution <- function(x, p, ..., log = FALSE){
   if(log) return(log_quantile(x, p, ...))
-  vec_is(p, double(), 1L)
+  vec_assert(p, double(), 1L)
   dist_apply(x, quantile, p = p, ...)
 }
 log_quantile <- function(x, q, ...) {
@@ -93,7 +93,7 @@ log_quantile <- function(x, q, ...) {
 }
 #' @export
 log_quantile.distribution <- function(x, p, ...){
-  vec_is(q, double(), 1L)
+  vec_assert(q, double(), 1L)
   dist_apply(x, log_quantile, p = p, ...)
 }
 
@@ -114,7 +114,7 @@ cdf <- function (x, q, ..., log = FALSE){
 #' @rdname cdf
 #' @export
 cdf.distribution <- function(x, q, ...){
-  vec_is(q, double(), 1L)
+  vec_assert(q, size = 1L)
   dist_apply(x, cdf, q = q, ...)
 }
 log_cdf <- function(x, q, ...) {
@@ -123,7 +123,7 @@ log_cdf <- function(x, q, ...) {
 }
 #' @export
 log_cdf.distribution <- function(x, q, ...){
-  vec_is(q, double(), 1L)
+  vec_assert(q, size = 1L)
   dist_apply(x, log_cdf, q = q, ...)
 }
 
@@ -278,14 +278,18 @@ kurtosis.distribution <- function(x, ...){
 #' Returns the median (50th percentile) of a probability distribution. This is
 #' equivalent to `quantile(x, p=0.5)`.
 #'
-#' @inheritParams stats::median
 #' @param x The distribution(s).
+#' @param na.rm Unused, included for consistency with the generic function.
 #' @param ... Additional arguments used by methods.
 #'
 #' @importFrom stats median
 #' @export
 median.distribution <- function(x, na.rm = FALSE, ...){
-  quantile(x, p = 0.5, na.rm = na.rm, ...)
+  # Only pass na.rm if it is explicitly provided.
+  if(missing(na.rm))
+    quantile(x, p = 0.5, ...)
+  else
+    quantile(x, p = 0.5, na.rm = na.rm, ...)
 }
 
 #' Probability intervals of a probability distribution
