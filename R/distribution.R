@@ -26,7 +26,7 @@ vec_ptype_abbr.distribution <- function(x, ...){
 format.distribution <- function(x, ...){
   x <- vec_data(x)
   out <- vapply(x, format, character(1L), ...)
-  out[vapply(x, is.null, logical(1L))] <- "?"
+  out[vapply(x, is.null, logical(1L))] <- "NA"
   out
 }
 
@@ -141,6 +141,8 @@ log_cdf.distribution <- function(x, q, ...){
 generate.distribution <- function(x, times, ...){
   times <- vec_cast(times, integer())
   times <- vec_recycle(times, size = length(x))
+  dist_is_na <- vapply(x, is.null, logical(1L))
+  x[dist_is_na] <- list(structure(list(), class = c("dist_na", "dist_default")))
   mapply(generate, vec_data(x), times = times, ..., SIMPLIFY = FALSE)
   # dist_apply(x, generate, times = times, ...)
   # Needs work to structure MV appropriately.
@@ -369,6 +371,8 @@ vec_arith.distribution <- function(op, x, y, ...){
 #' @method vec_arith.distribution default
 #' @export
 vec_arith.distribution.default <- function(op, x, y, ...){
+  dist_is_na <- vapply(x, is.null, logical(1L))
+  x[dist_is_na] <- list(structure(list(), class = c("dist_na", "dist_default")))
   if(is_empty(y)){
     out <- lapply(x, get(op))
   }
@@ -432,4 +436,23 @@ vec_cast.distribution.integer <- vec_cast.distribution.double
 #' @export
 vec_cast.character.distribution <- function(x, to, ...){
   format(x)
+}
+
+#' Test if the object is a distribution
+#'
+#' @description
+#' This function returns `TRUE` for distributions and `FALSE` for all other objects.
+#' \lifecycle{stable}
+#'
+#' @param x An object.
+#'
+#' @return TRUE if the object inherits from the distribution class.
+#' @rdname is-distribution
+#' @examples
+#' dist <- dist_normal()
+#' is_distribution(dist)
+#' is_distribution("distributional")
+#' @export
+is_distribution <- function(x) {
+    inherits(x, "distribution")
 }
