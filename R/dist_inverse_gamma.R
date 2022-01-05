@@ -7,7 +7,21 @@
 #' @seealso [actuar::InverseGamma]
 #'
 #' @examples
-#' dist_inverse_gamma(shape = c(1,2,3,3), rate = c(1,1,1,2))
+#' dist <- dist_inverse_gamma(shape = c(1,2,3,3), rate = c(1,1,1,2))
+#' dist
+#'
+#' @examplesIf requireNamespace("actuar", quietly = TRUE)
+#' mean(dist)
+#' variance(dist)
+#' support(dist)
+#' generate(dist, 10)
+#'
+#' density(dist, 2)
+#' density(dist, 2, log = TRUE)
+#'
+#' cdf(dist, 4)
+#'
+#' quantile(dist, 0.7)
 #'
 #' @name dist_inverse_gamma
 #' @export
@@ -21,11 +35,6 @@ dist_inverse_gamma <- function(shape, rate = 1/scale, scale){
     abort("The rate/scale parameter of a Inverse Gamma distribution must be strictly positive.")
   }
   new_dist(s = shape, r = rate, class = "dist_inverse_gamma")
-}
-
-#' @export
-print.dist_inverse_gamma <- function(x, ...){
-  cat(format(x, ...))
 }
 
 #' @export
@@ -74,7 +83,7 @@ mean.dist_inverse_gamma <- function(x, ...){
 }
 
 #' @export
-variance.dist_inverse_gamma <- function(x, ...){
+covariance.dist_inverse_gamma <- function(x, ...){
   if(x[["s"]] <= 2) return(NA_real_)
   1/(x[["r"]]^2*(x[["s"]]-1)^2*(x[["s"]]-2))
 }

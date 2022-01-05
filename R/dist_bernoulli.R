@@ -90,11 +90,6 @@ dist_bernoulli <- function(prob){
 }
 
 #' @export
-print.dist_bernoulli <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_bernoulli <- function(x, digits = 2, ...){
   sprintf(
     "Bernoulli(%s)",
@@ -114,7 +109,7 @@ log_density.dist_bernoulli <- function(x, at, ...){
 
 #' @export
 quantile.dist_bernoulli <- function(x, p, ...){
-  stats::qbinom(p, 1, x[["p"]])
+  as.logical(stats::qbinom(p, 1, x[["p"]]))
 }
 
 #' @export
@@ -124,7 +119,7 @@ cdf.dist_bernoulli <- function(x, q, ...){
 
 #' @export
 generate.dist_bernoulli <- function(x, times, ...){
-  stats::rbinom(times, 1, x[["p"]])
+  as.logical(stats::rbinom(times, 1, x[["p"]]))
 }
 
 #' @export
@@ -133,7 +128,7 @@ mean.dist_bernoulli <- function(x, ...){
 }
 
 #' @export
-variance.dist_bernoulli <- function(x, ...){
+covariance.dist_bernoulli <- function(x, ...){
   x[["p"]]*(1-x[["p"]])
 }
 

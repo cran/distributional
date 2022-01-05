@@ -6,13 +6,7 @@
 \alias{distributional-package}
 \title{distributional: Vectorised Probability Distributions}
 \description{
-Vectorised distribution objects with tools for manipulating, 
-    visualising, and using probability distributions. Designed to allow model
-    prediction outputs to return distributions rather than their parameters, 
-    allowing users to directly interact with predictive distributions in a
-    data-oriented workflow. In addition to providing generic replacements for
-    p/d/q/r functions, other useful statistics can be computed including means,
-    variances, intervals, and highest density regions.
+Vectorised distribution objects with tools for manipulating, visualising, and using probability distributions. Designed to allow model prediction outputs to return distributions rather than their parameters, allowing users to directly interact with predictive distributions in a data-oriented workflow. In addition to providing generic replacements for p/d/q/r functions, other useful statistics can be computed including means, variances, intervals, and highest density regions.
 }
 \seealso{
 Useful links:
@@ -28,13 +22,13 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Matthew Kay (\href{https://orcid.org/0000-0001-9446-0419}{ORCID})
   \item Alex Hayes (\href{https://orcid.org/0000-0002-4985-5160}{ORCID})
 }
 
 Other contributors:
 \itemize{
   \item Earo Wang (\href{https://orcid.org/0000-0001-6448-5260}{ORCID}) [contributor]
-  \item Matthew Kay (\href{https://orcid.org/0000-0001-9446-0419}{ORCID}) [contributor]
 }
 
 }

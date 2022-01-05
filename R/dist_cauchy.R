@@ -77,11 +77,6 @@ dist_cauchy <- function(location, scale){
 }
 
 #' @export
-print.dist_cauchy <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_cauchy <- function(x, digits = 2, ...){
   sprintf(
     "Cauchy(%s, %s)",
@@ -121,7 +116,7 @@ mean.dist_cauchy <- function(x, ...){
 }
 
 #' @export
-variance.dist_cauchy <- function(x, ...){
+covariance.dist_cauchy <- function(x, ...){
   NA_real_
 }
 

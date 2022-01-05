@@ -79,11 +79,6 @@ dist_student_t <- function(df, mu = 0, sigma = 1, ncp = NULL){
 }
 
 #' @export
-print.dist_student_t <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_student_t <- function(x, digits = 2, ...){
   out <- sprintf(
     "t(%s, %s, %s%s)",
@@ -144,7 +139,7 @@ mean.dist_student_t <- function(x, ...){
 }
 
 #' @export
-variance.dist_student_t <- function(x, ...){
+covariance.dist_student_t <- function(x, ...){
   df <- x[["df"]]
   ncp <- x[["ncp"]]
   if(df <= 1) return(NA_real_)

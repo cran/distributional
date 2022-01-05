@@ -12,17 +12,17 @@
 #'
 #' @export
 new_hilo <- function(lower = double(), upper = double(), size = double()) {
-  vec_assert(lower, double())
-  vec_assert(upper, double())
   vec_assert(size, double())
   if (any(size < 0 | size > 100, na.rm = TRUE))
     abort("'size' must be between [0, 100].")
 
   out <- vec_recycle_common(lower = lower, upper = upper)
-  if (any(out[["upper"]] < out[["lower"]], na.rm = TRUE)) {
-    abort("`upper` can't be lower than `lower`.")
+  if(vec_is(lower, double()) && vec_is(upper, double())) {
+    if (any(out[["upper"]] < out[["lower"]], na.rm = TRUE)) {
+      abort("`upper` can't be lower than `lower`.")
+    }
   }
-  len <- length(out[[1]])
+  len <- vec_size(out[[1]])
   out[["level"]] <- vctrs::vec_recycle(size, len)
 
   vctrs::new_rcrd(out, class = "hilo")
@@ -33,9 +33,21 @@ new_hilo <- function(lower = double(), upper = double(), size = double()) {
 #' Used to extract a specified prediction interval at a particular confidence
 #' level from a distribution.
 #'
+#' The numeric lower and upper bounds can be extracted from the interval using
+#' `<hilo>$lower` and `<hilo>$upper` as shown in the examples below.
+#'
 #' @param x Object to create hilo from.
 #' @param ... Additional arguments used by methods.
 #'
+#' @examples
+#' # 95% interval from a standard normal distribution
+#' interval <- hilo(dist_normal(0, 1), 95)
+#' interval
+#'
+#' # Extract the individual quantities with `$lower`, `$upper`, and `$level`
+#' interval$lower
+#' interval$upper
+#' interval$level
 #' @export
 hilo <- function(x, ...){
   UseMethod("hilo")
@@ -60,13 +72,20 @@ is_hilo <- function(x) {
 
 #' @export
 format.hilo <- function(x, justify = "right", ...) {
-  x <- vec_data(x)
+  lwr <- field(x, "lower")
+  upr <- field(x, "upper")
+  if(is.matrix(lwr)) {
+    lwr <- if(ncol(lwr) > 1) vctrs::vec_ptype_abbr(lwr) else drop(lwr)
+  }
+  if(is.matrix(upr)) {
+    upr <- if(ncol(upr) > 1) vctrs::vec_ptype_abbr(upr) else drop(upr)
+  }
   limit <- paste(
-    format(x$lower, justify = justify, ...),
-    format(x$upper, justify = justify, ...),
+    format(lwr, justify = justify, ...),
+    format(upr, justify = justify, ...),
     sep = ", "
   )
-  paste0("[", limit, "]", x$level)
+  paste0("[", limit, "]", field(x, "level"))
 }
 
 #' @export
@@ -79,6 +98,14 @@ is.na.hilo <- function(x) {
 #' @export
 vec_ptype2.hilo.hilo <- function(x, y, ...){
   x
+}
+
+#' @export
+vec_cast.character.hilo <- function(x, to, ...){
+  sprintf(
+    "[%s, %s]%s",
+    as.character(x$lower), as.character(x$upper), as.character(x$level)
+  )
 }
 
 #' @method vec_math hilo
@@ -94,7 +121,6 @@ vec_math.hilo <- function(.fn, .x, ...){
   vec_restore(out, .x)
 }
 
-#' @rdname vctrs-compat
 #' @method vec_arith hilo
 #' @export
 vec_arith.hilo <- function(op, x, y, ...){

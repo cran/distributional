@@ -74,11 +74,6 @@ dist_hypergeometric <- function(m, n, k){
 }
 
 #' @export
-print.dist_hypergeometric <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_hypergeometric <- function(x, digits = 2, ...){
   sprintf(
     "Hypergeometric(%s, %s, %s)",
@@ -120,7 +115,7 @@ mean.dist_hypergeometric <- function(x, ...){
 }
 
 #' @export
-variance.dist_hypergeometric <- function(x, ...){
+covariance.dist_hypergeometric <- function(x, ...){
   m <- x[["m"]]
   n <- x[["n"]]
   k <- x[["k"]]

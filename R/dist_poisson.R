@@ -78,11 +78,6 @@ dist_poisson <- function(lambda){
 }
 
 #' @export
-print.dist_poisson <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_poisson <- function(x, digits = 2, ...){
   sprintf(
     "Pois(%s)",
@@ -112,7 +107,7 @@ cdf.dist_poisson <- function(x, q, ...){
 
 #' @export
 generate.dist_poisson <- function(x, times, ...){
-  stats::rpois(times, x[["l"]])
+  as.integer(stats::rpois(times, x[["l"]]))
 }
 
 #' @export
@@ -121,7 +116,7 @@ mean.dist_poisson <- function(x, ...){
 }
 
 #' @export
-variance.dist_poisson <- function(x, ...){
+covariance.dist_poisson <- function(x, ...){
   x[["l"]]
 }
 

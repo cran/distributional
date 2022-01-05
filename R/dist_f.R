@@ -82,11 +82,6 @@ dist_f <- function(df1, df2, ncp = NULL){
 }
 
 #' @export
-print.dist_f <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_f <- function(x, digits = 2, ...){
   sprintf(
     "F(%s, %s)",
@@ -156,7 +151,7 @@ mean.dist_f <- function(x, ...){
 }
 
 #' @export
-variance.dist_f <- function(x, ...){
+covariance.dist_f <- function(x, ...){
   df1 <- x[["df1"]]
   df2 <- x[["df2"]]
   if(df2 > 4) {

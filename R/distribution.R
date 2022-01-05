@@ -40,6 +40,9 @@ dimnames.distribution <- function(x){
   attr(x, "vars")
 }
 
+#' @export
+`[[.distribution` <- `[`
+
 #' The probability density/mass function
 #'
 #' \lifecycle{stable}
@@ -56,7 +59,7 @@ dimnames.distribution <- function(x){
 #' @export
 density.distribution <- function(x, at, ..., log = FALSE){
   if(log) return(log_density(x, at, ...))
-  vec_assert(at, size = 1L)
+  at <- arg_listable(at, .ptype = NULL)
   dist_apply(x, density, at = at, ...)
 }
 
@@ -66,7 +69,7 @@ log_density <- function(x, at, ...) {
 }
 #' @export
 log_density.distribution <- function(x, at, ...){
-  vec_assert(at, size = 1L)
+  at <- arg_listable(at, .ptype = NULL)
   dist_apply(x, log_density, at = at, ...)
 }
 
@@ -84,7 +87,7 @@ log_density.distribution <- function(x, at, ...){
 #' @export
 quantile.distribution <- function(x, p, ..., log = FALSE){
   if(log) return(log_quantile(x, p, ...))
-  vec_assert(p, double(), 1L)
+  p <- arg_listable(p, .ptype = double())
   dist_apply(x, quantile, p = p, ...)
 }
 log_quantile <- function(x, q, ...) {
@@ -94,6 +97,7 @@ log_quantile <- function(x, q, ...) {
 #' @export
 log_quantile.distribution <- function(x, p, ...){
   vec_assert(q, double(), 1L)
+  p <- arg_listable(p, .ptype = double())
   dist_apply(x, log_quantile, p = p, ...)
 }
 
@@ -114,7 +118,7 @@ cdf <- function (x, q, ..., log = FALSE){
 #' @rdname cdf
 #' @export
 cdf.distribution <- function(x, q, ...){
-  vec_assert(q, size = 1L)
+  q <- arg_listable(q, .ptype = NULL)
   dist_apply(x, cdf, q = q, ...)
 }
 log_cdf <- function(x, q, ...) {
@@ -123,7 +127,7 @@ log_cdf <- function(x, q, ...) {
 }
 #' @export
 log_cdf.distribution <- function(x, q, ...){
-  vec_assert(q, size = 1L)
+  q <- arg_listable(q, .ptype = NULL)
   dist_apply(x, log_cdf, q = q, ...)
 }
 
@@ -141,9 +145,10 @@ log_cdf.distribution <- function(x, q, ...){
 generate.distribution <- function(x, times, ...){
   times <- vec_cast(times, integer())
   times <- vec_recycle(times, size = length(x))
+  x <- vec_data(x)
   dist_is_na <- vapply(x, is.null, logical(1L))
   x[dist_is_na] <- list(structure(list(), class = c("dist_na", "dist_default")))
-  mapply(generate, vec_data(x), times = times, ..., SIMPLIFY = FALSE)
+  mapply(generate, x, times = times, ..., SIMPLIFY = FALSE)
   # dist_apply(x, generate, times = times, ...)
   # Needs work to structure MV appropriately.
 }
@@ -179,6 +184,8 @@ The same sample will be used for each distribution, i.e. `sample = list(sample)`
   }
 }
 
+#' @rdname likelihood
+#' @export
 log_likelihood <- function(x, ...) {
   ellipsis::check_dots_used()
   UseMethod("log_likelihood")
@@ -186,6 +193,78 @@ log_likelihood <- function(x, ...) {
 #' @export
 log_likelihood.distribution <- function(x, sample, ...){
   dist_apply(x, log_likelihood, sample = sample, ...)
+}
+
+#' Extract the parameters of a distribution
+#'
+#' \lifecycle{experimental}
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @name parameters
+#' @examples
+#' dist <- c(
+#'   dist_normal(1:2),
+#'   dist_poisson(3),
+#'   dist_multinomial(size = c(4, 3),
+#'   prob = list(c(0.3, 0.5, 0.2), c(0.1, 0.5, 0.4)))
+#'   )
+#' parameters(dist)
+#' @export
+parameters <- function(x, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("parameters")
+}
+
+#' @rdname parameters
+#' @export
+parameters.distribution <- function(x, ...) {
+  x <- lapply(vec_data(x), parameters)
+  x <- lapply(x, function(z) data_frame(!!!z, .name_repair = "minimal"))
+  vec_rbind(!!!x)
+}
+
+#' Extract the name of the distribution family
+#'
+#' \lifecycle{experimental}
+#'
+#' @param object The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @examples
+#' dist <- c(
+#'   dist_normal(1:2),
+#'   dist_poisson(3),
+#'   dist_multinomial(size = c(4, 3),
+#'   prob = list(c(0.3, 0.5, 0.2), c(0.1, 0.5, 0.4)))
+#'   )
+#' family(dist)
+#'
+#' @importFrom stats family
+#' @export
+family.distribution <- function(object, ...) {
+  vapply(vec_data(object), family, character(1L))
+}
+
+#' Region of support of a distribution
+#'
+#' \lifecycle{experimental}
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @name support
+#' @export
+support <- function(x, ...) {
+  ellipsis::check_dots_used()
+  UseMethod("support")
+}
+
+#' @rdname support
+#' @export
+support.distribution <- function(x, ...) {
+  dist_apply(x, support, ...)
 }
 
 #' Mean of a probability distribution
@@ -205,13 +284,20 @@ mean.distribution <- function(x, ...){
 
 #' Variance
 #'
-#' A generic function for computing the variance of an object. The default
-#' method will use [`stats::var()`] to compute the variance.
+#' A generic function for computing the variance of an object.
 #'
 #' @param x An object.
 #' @param ... Additional arguments used by methods.
 #'
-#' @seealso [`variance.distribution()`]
+#' @details
+#'
+#' The implementation of `variance()` for numeric variables coerces the input to
+#' a vector then uses [`stats::var()`] to compute the variance. This means that,
+#' unlike [`stats::var()`], if `variance()` is passed a matrix or a 2-dimensional
+#' array, it will still return the variance ([`stats::var()`] returns the
+#' covariance matrix in that case).
+#'
+#' @seealso [`variance.distribution()`], [`covariance()`]
 #'
 #' @export
 variance <- function(x, ...){
@@ -219,7 +305,20 @@ variance <- function(x, ...){
 }
 #' @export
 variance.default <- function(x, ...){
-  stats::var(x, ...)
+  stop(
+    "The variance() method is not supported for objects of type ",
+    paste(deparse(class(x)), collapse = "")
+  )
+}
+#' @rdname variance
+#' @export
+variance.numeric <- function(x, ...){
+  stats::var(as.vector(x), ...)
+}
+#' @rdname variance
+#' @export
+variance.matrix <- function(x, ...){
+  diag(stats::cov(x, ...))
 }
 
 #' Variance of a probability distribution
@@ -235,6 +334,46 @@ variance.default <- function(x, ...){
 #' @export
 variance.distribution <- function(x, ...){
   dist_apply(x, variance, ...)
+}
+
+#' Covariance
+#'
+#' A generic function for computing the covariance of an object.
+#'
+#' @param x An object.
+#' @param ... Additional arguments used by methods.
+#'
+#' @seealso [`covariance.distribution()`], [`variance()`]
+#'
+#' @export
+covariance <- function(x, ...){
+  UseMethod("covariance")
+}
+#' @export
+covariance.default <- function(x, ...){
+  stop(
+    "The covariance() method is not supported for objects of type ",
+    paste(deparse(class(x)), collapse = "")
+  )
+}
+#' @rdname variance
+#' @export
+covariance.numeric <- function(x, ...){
+  stats::cov(x, ...)
+}
+#' Covariance of a probability distribution
+#'
+#' \lifecycle{stable}
+#'
+#' Returns the empirical covariance of the probability distribution. If the
+#' method does not exist, the covariance of a random sample will be returned.
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @export
+covariance.distribution <- function(x, ...){
+  dist_apply(x, covariance, ...)
 }
 
 #' Skewness of a probability distribution
@@ -287,11 +426,7 @@ kurtosis.distribution <- function(x, ...){
 #' @importFrom stats median
 #' @export
 median.distribution <- function(x, na.rm = FALSE, ...){
-  # Only pass na.rm if it is explicitly provided.
-  if(missing(na.rm))
-    quantile(x, p = 0.5, ...)
-  else
-    quantile(x, p = 0.5, na.rm = na.rm, ...)
+  dist_apply(x, median, na.rm = na.rm, ...)
 }
 
 #' Probability intervals of a probability distribution
@@ -311,6 +446,7 @@ median.distribution <- function(x, na.rm = FALSE, ...){
 #' @importFrom stats median
 #' @export
 hilo.distribution <- function(x, size = 95, ...){
+  size <- arg_listable(size, .ptype = double())
   dist_apply(x, hilo, size = size, ...)
 }
 
@@ -331,31 +467,8 @@ hilo.distribution <- function(x, size = 95, ...){
 #'
 #' @export
 hdr.distribution <- function(x, size = 95, n = 512, ...){
-  dist_x <- vapply(seq(0.5/n, 1 - 0.5/n, length.out = n), quantile, numeric(1L), x = x)
-  dist_y <- vapply(dist_x, density, numeric(1L), x = x)
-  alpha <- quantile(dist_y, probs = size/100)
-
-  crossing_alpha <- function(alpha, x, y){
-    it <- seq_len(length(y) - 1)
-    dd <- y - alpha
-    dd <- dd[it + 1] * dd[it]
-    index <- it[dd <= 0]
-    # unique() removes possible duplicates if sequential dd has same value.
-    # More robust approach is required.
-    unique(
-      vapply(
-        index,
-        function(.x) stats::approx(y[.x + c(0,1)], x[.x + c(0,1)], xout = alpha)$y,
-        numeric(1L)
-      )
-    )
-  }
-
-  # purrr::map(alpha, crossing_alpha, dist_x, dist_y)
-  hdr <- crossing_alpha(alpha, dist_x, dist_y)
-  lower_hdr <- seq_along(hdr)%%2==1
-  hdr <- new_hilo(hdr[lower_hdr], hdr[!lower_hdr], size = size)
-  new_hdr(list(hdr))
+  size <- arg_listable(size, .ptype = double())
+  dist_apply(x, hdr, size = size, n = n, ...)
 }
 
 #' @export
@@ -374,13 +487,14 @@ vec_arith.distribution.default <- function(op, x, y, ...){
   dist_is_na <- vapply(x, is.null, logical(1L))
   x[dist_is_na] <- list(structure(list(), class = c("dist_na", "dist_default")))
   if(is_empty(y)){
-    out <- lapply(x, get(op))
+    out <- lapply(vec_data(x), get(op))
   }
   else {
     x <- vec_recycle_common(x = x, y = y)
     y <- x[["y"]]
+    if(is_distribution(y)) y <- vec_data(y)
     x <- x[["x"]]
-    out <- mapply(get(op), x = x, y = y, SIMPLIFY = FALSE)
+    out <- mapply(get(op), x = vec_data(x), y = y, SIMPLIFY = FALSE)
   }
   vec_restore(out, x)
 }
@@ -391,7 +505,7 @@ vec_arith.numeric.distribution <- function(op, x, y, ...){
   x <- vec_recycle_common(x = x, y = y)
   y <- x[["y"]]
   x <- x[["x"]]
-  out <- mapply(get(op), x = x, y = y, SIMPLIFY = FALSE)
+  out <- mapply(get(op), x = x, y = vec_data(y), SIMPLIFY = FALSE)
   vec_restore(out, y)
 }
 
@@ -400,7 +514,7 @@ vec_arith.numeric.distribution <- function(op, x, y, ...){
 vec_math.distribution <- function(.fn, .x, ...) {
   if(.fn %in% c("is.nan", "is.infinite")) return(rep_len(FALSE, length(.x)))
   if(.fn == "is.finite") return(rep_len(TRUE, length(.x)))
-  out <- lapply(.x, get(.fn), ...)
+  out <- lapply(vec_data(.x), get(.fn), ...)
   vec_restore(out, .x)
 }
 

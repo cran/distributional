@@ -10,8 +10,6 @@
 #' @export
 dist_inflated <- function(dist, prob, x = 0){
   vec_is(dist, new_dist())
-  vec_is(x, numeric())
-  vec_is(x, numeric())
   if(prob < 0 || prob > 1){
     abort("The inflation probability must be between 0 and 1.")
   }
@@ -22,8 +20,8 @@ dist_inflated <- function(dist, prob, x = 0){
 #' @export
 format.dist_inflated <- function(x, ...){
   sprintf(
-    "%i+%s",
-    x[["x"]],
+    "%s+%s",
+    format(x[["x"]]),
     format(x[["dist"]])
   )
 }
@@ -50,7 +48,7 @@ cdf.dist_inflated <- function(x, q, ...){
 generate.dist_inflated <- function(x, times, ...){
   p <- x[["p"]]
   inf <- stats::runif(times) < p
-  r <- numeric(times)
+  r <- vec_init(x[["x"]], times)
   r[inf] <- x[["x"]]
   r[!inf] <- generate(x[["dist"]], sum(!inf))
   r
@@ -58,13 +56,20 @@ generate.dist_inflated <- function(x, times, ...){
 
 #' @export
 mean.dist_inflated <- function(x, ...){
+  # Can't compute if inflation value is not numeric
+  if(!vec_is(x[["x"]], numeric())) return(NA_real_)
+
   p <- x[["p"]]
   p*x[["x"]] + (1-p)*mean(x[["dist"]])
 }
 
 #' @export
-variance.dist_inflated <- function(x, ...){
-  if(x[["x"]] != 0) return(NextMethod())
+covariance.dist_inflated <- function(x, ...){
+  # Can't compute if inflation value is not numeric
+  if(!vec_is(x[["x"]], numeric())) return(NA_real_)
+  # Can't (easily) compute if inflation value is not zero
+  if(x[["x"]] != 0) return(NA_real_)
+
   m1 <- mean(x[["dist"]])
   v <- variance(x[["dist"]])
   m2 <- v + m1^2

@@ -56,6 +56,7 @@
 #' variance(dist)
 #' skewness(dist)
 #' kurtosis(dist)
+#' support(dist)
 #'
 #' generate(dist, 10)
 #'
@@ -74,11 +75,6 @@ dist_negative_binomial <- function(size, prob){
     abort("Probability of success must be between 0 and 1.")
   }
   new_dist(n = size, p = prob, class = "dist_negbin")
-}
-
-#' @export
-print.dist_negbin <- function(x, ...){
-  cat(format(x, ...))
 }
 
 #' @export
@@ -121,7 +117,7 @@ mean.dist_negbin <- function(x, ...){
 }
 
 #' @export
-variance.dist_negbin <- function(x, ...){
+covariance.dist_negbin <- function(x, ...){
   x[["n"]] * (1 - x[["p"]]) / x[["p"]]^2
 }
 

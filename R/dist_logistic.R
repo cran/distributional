@@ -79,11 +79,6 @@ dist_logistic <- function(location, scale){
 }
 
 #' @export
-print.dist_logistic <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_logistic <- function(x, digits = 2, ...){
   sprintf(
     "Logistic(%s, %s)",
@@ -123,7 +118,7 @@ mean.dist_logistic <- function(x, ...){
 }
 
 #' @export
-variance.dist_logistic <- function(x, ...){
+covariance.dist_logistic <- function(x, ...){
   (x[["s"]]*pi)^2/3
 }
 

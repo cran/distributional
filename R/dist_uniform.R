@@ -97,11 +97,6 @@ dist_uniform <- function(min, max){
 }
 
 #' @export
-print.dist_uniform <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_uniform <- function(x, digits = 2, ...){
   sprintf(
     "U(%s, %s)",
@@ -141,7 +136,7 @@ mean.dist_uniform <- function(x, ...){
 }
 
 #' @export
-variance.dist_uniform <- function(x, ...){
+covariance.dist_uniform <- function(x, ...){
   (x[["u"]]-x[["l"]])^2/12
 }
 

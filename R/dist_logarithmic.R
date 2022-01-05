@@ -7,8 +7,21 @@
 #' @seealso [actuar::Logarithmic]
 #'
 #' @examples
-#' dist_logarithmic(prob = c(0.33, 0.66, 0.99))
+#' dist <- dist_logarithmic(prob = c(0.33, 0.66, 0.99))
+#' dist
 #'
+#' @examplesIf requireNamespace("actuar", quietly = TRUE)
+#' mean(dist)
+#' variance(dist)
+#' support(dist)
+#' generate(dist, 10)
+#'
+#' density(dist, 2)
+#' density(dist, 2, log = TRUE)
+#'
+#' cdf(dist, 4)
+#'
+#' quantile(dist, 0.7)
 #' @name dist_logarithmic
 #' @export
 dist_logarithmic <- function(prob){
@@ -17,11 +30,6 @@ dist_logarithmic <- function(prob){
     abort("The prob parameter of a Logarithmic distribution must be between 0 and 1.")
   }
   new_dist(p = prob, class = "dist_logarithmic")
-}
-
-#' @export
-print.dist_logarithmic <- function(x, ...){
-  cat(format(x, ...))
 }
 
 #' @export
@@ -69,7 +77,7 @@ mean.dist_logarithmic <- function(x, ...){
 }
 
 #' @export
-variance.dist_logarithmic <- function(x, ...){
+covariance.dist_logarithmic <- function(x, ...){
   p <- x[["p"]]
   -(p^2 + p*log(1-p))/((1-p)*log(1-p))^2
 }

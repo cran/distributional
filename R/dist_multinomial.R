@@ -5,12 +5,12 @@
 #' The multinomial distribution is a generalization of the binomial
 #' distribution to multiple categories. It is perhaps easiest to think
 #' that we first extend a [dist_bernoulli()] distribution to include more
-#' than two categories, resulting in a categorical distribution.
+#' than two categories, resulting in a [dist_categorical()] distribution.
 #' We then extend repeat the Categorical experiment several (\eqn{n})
 #' times.
 #'
-#' @inheritParams stats::dmultinom
-#'
+#' @param size The number of draws from the Categorical distribution.
+#' @param prob The probability of an event occurring from each draw.
 #'
 #' @details
 #'
@@ -76,11 +76,6 @@ dist_multinomial <- function(size, prob){
 }
 
 #' @export
-print.dist_multinomial <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_multinomial <- function(x, digits = 2, ...){
   sprintf(
     "Multinomial(%s)[%s]",
@@ -91,6 +86,7 @@ format.dist_multinomial <- function(x, digits = 2, ...){
 
 #' @export
 density.dist_multinomial <- function(x, at, ...){
+  if(is.list(at)) return(vapply(at, density, numeric(1L), x = x, ...))
   stats::dmultinom(at, x[["s"]], x[["p"]])
 }
 
@@ -106,11 +102,11 @@ generate.dist_multinomial <- function(x, times, ...){
 
 #' @export
 mean.dist_multinomial <- function(x, ...){
-  x[["s"]]*x[["p"]]
+  matrix(x[["s"]]*x[["p"]], nrow = 1)
 }
 
 #' @export
-variance.dist_multinomial <- function(x, ...){
+covariance.dist_multinomial <- function(x, ...){
   s <- x[["s"]]
   p <- x[["p"]]
   v <- numeric(length(p)^2)

@@ -98,11 +98,6 @@ dist_binomial <- function(size, prob){
 }
 
 #' @export
-print.dist_binomial <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_binomial <- function(x, digits = 2, ...){
   sprintf(
     "B(%s, %s)",
@@ -123,7 +118,7 @@ log_density.dist_binomial <- function(x, at, ...){
 
 #' @export
 quantile.dist_binomial <- function(x, p, ...){
-  stats::qbinom(p, x[["n"]], x[["p"]])
+  as.integer(stats::qbinom(p, x[["n"]], x[["p"]]))
 }
 
 #' @export
@@ -133,7 +128,7 @@ cdf.dist_binomial <- function(x, q, ...){
 
 #' @export
 generate.dist_binomial <- function(x, times, ...){
-  stats::rbinom(times, x[["n"]], x[["p"]])
+  as.integer(stats::rbinom(times, x[["n"]], x[["p"]]))
 }
 
 #' @export
@@ -142,7 +137,7 @@ mean.dist_binomial <- function(x, ...){
 }
 
 #' @export
-variance.dist_binomial <- function(x, ...){
+covariance.dist_binomial <- function(x, ...){
   x[["n"]]*x[["p"]]*(1-x[["p"]])
 }
 

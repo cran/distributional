@@ -36,11 +36,6 @@ dist_beta <- function(shape1, shape2){
 }
 
 #' @export
-print.dist_beta <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_beta <- function(x, digits = 2, ...){
   sprintf(
     "Beta(%s, %s)",
@@ -80,7 +75,7 @@ mean.dist_beta <- function(x, ...){
 }
 
 #' @export
-variance.dist_beta <- function(x, ...){
+covariance.dist_beta <- function(x, ...){
   a <- x[["shape1"]]
   b <- x[["shape2"]]
   a*b/((a+b)^2*(a+b+1))

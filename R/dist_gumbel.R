@@ -45,13 +45,14 @@
 #'
 #' @examples
 #' dist <- dist_gumbel(alpha = c(0.5, 1, 1.5, 3), scale = c(2, 2, 3, 4))
-#'
 #' dist
+#'
+#' @examplesIf requireNamespace("actuar", quietly = TRUE)
 #' mean(dist)
 #' variance(dist)
 #' skewness(dist)
 #' kurtosis(dist)
-#'
+#' support(dist)
 #' generate(dist, 10)
 #'
 #' density(dist, 2)
@@ -70,11 +71,6 @@ dist_gumbel <- function(alpha, scale){
     abort("The scale parameter of a Gumbel distribution must be strictly positive.")
   }
   new_dist(a = alpha, s = scale, class = "dist_gumbel")
-}
-
-#' @export
-print.dist_gumbel <- function(x, ...){
-  cat(format(x, ...))
 }
 
 #' @export
@@ -122,7 +118,7 @@ mean.dist_gumbel <- function(x, ...){
 }
 
 #' @export
-variance.dist_gumbel <- function(x, ...){
+covariance.dist_gumbel <- function(x, ...){
   (pi*x[["s"]])^2/6
 }
 

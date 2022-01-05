@@ -7,7 +7,21 @@
 #' @seealso [actuar::InverseExponential]
 #'
 #' @examples
-#' dist_inverse_exponential(rate = 1:5)
+#' dist <- dist_inverse_exponential(rate = 1:5)
+#' dist
+#'
+#' @examplesIf requireNamespace("actuar", quietly = TRUE)
+#' mean(dist)
+#' variance(dist)
+#' support(dist)
+#' generate(dist, 10)
+#'
+#' density(dist, 2)
+#' density(dist, 2, log = TRUE)
+#'
+#' cdf(dist, 4)
+#'
+#' quantile(dist, 0.7)
 #'
 #' @name dist_inverse_exponential
 #' @export
@@ -17,11 +31,6 @@ dist_inverse_exponential <- function(rate){
     abort("The rate parameter of a Inverse Exponential distribution must be strictly positive.")
   }
   new_dist(r = rate, class = "dist_inverse_exponential")
-}
-
-#' @export
-print.dist_inverse_exponential <- function(x, ...){
-  cat(format(x, ...))
 }
 
 #' @export
@@ -68,6 +77,6 @@ mean.dist_inverse_exponential <- function(x, ...){
 }
 
 #' @export
-variance.dist_inverse_exponential <- function(x, ...){
+covariance.dist_inverse_exponential <- function(x, ...){
   NA_real_
 }

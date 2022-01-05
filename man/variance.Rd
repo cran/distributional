@@ -2,9 +2,18 @@
 % Please edit documentation in R/distribution.R
 \name{variance}
 \alias{variance}
+\alias{variance.numeric}
+\alias{variance.matrix}
+\alias{covariance.numeric}
 \title{Variance}
 \usage{
 variance(x, ...)
+
+\method{variance}{numeric}(x, ...)
+
+\method{variance}{matrix}(x, ...)
+
+\method{covariance}{numeric}(x, ...)
 }
 \arguments{
 \item{x}{An object.}
@@ -12,9 +21,15 @@ variance(x, ...)
 \item{...}{Additional arguments used by methods.}
 }
 \description{
-A generic function for computing the variance of an object. The default
-method will use \code{\link[stats:cor]{stats::var()}} to compute the variance.
+A generic function for computing the variance of an object.
+}
+\details{
+The implementation of \code{variance()} for numeric variables coerces the input to
+a vector then uses \code{\link[stats:cor]{stats::var()}} to compute the variance. This means that,
+unlike \code{\link[stats:cor]{stats::var()}}, if \code{variance()} is passed a matrix or a 2-dimensional
+array, it will still return the variance (\code{\link[stats:cor]{stats::var()}} returns the
+covariance matrix in that case).
 }
 \seealso{
-\code{\link[=variance.distribution]{variance.distribution()}}
+\code{\link[=variance.distribution]{variance.distribution()}}, \code{\link[=covariance]{covariance()}}
 }

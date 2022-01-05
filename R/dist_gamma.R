@@ -92,11 +92,6 @@ dist_gamma <- function(shape, rate){
 }
 
 #' @export
-print.dist_gamma <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_gamma <- function(x, digits = 2, ...){
   sprintf(
     if (is_utf8_output()) "\u0393(%s, %s)" else "Gamma(%s, %s)",
@@ -136,7 +131,7 @@ mean.dist_gamma <- function(x, ...){
 }
 
 #' @export
-variance.dist_gamma <- function(x, ...){
+covariance.dist_gamma <- function(x, ...){
   x[["shape"]] / x[["rate"]]^2
 }
 

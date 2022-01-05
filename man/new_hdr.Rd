@@ -4,16 +4,28 @@
 \alias{new_hdr}
 \title{Construct hdr intervals}
 \usage{
-new_hdr(x = list())
+new_hdr(
+  lower = list_of(.ptype = double()),
+  upper = list_of(.ptype = double()),
+  size = double()
+)
 }
 \arguments{
-\item{x}{A list of \code{\link[=hilo]{hilo()}} objects.}
+\item{lower, upper}{A list of numeric vectors specifying the region's lower
+and upper bounds.}
+
+\item{size}{A numeric vector specifying the coverage size of the region.}
 }
 \value{
 A "hdr" vector
 }
 \description{
 Construct hdr intervals
+}
+\examples{
+
+new_hdr(lower = list(1, c(3,6)), upper = list(10, c(5, 8)), size = c(80, 95))
+
 }
 \author{
 Mitchell O'Hara-Wild

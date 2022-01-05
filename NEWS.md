@@ -1,3 +1,60 @@
+# distributional 0.3.0
+
+## New features
+
+### Probability distributions
+
+* Added `dist_categorical()` for the Categorical distribution.
+* Added `dist_lognormal()` for the log-normal distribution. Mathematical 
+  conversion shortcuts have also been added, so `exp(dist_normal())` produces
+  `dist_lognormal()`.
+
+### Generics
+
+* Added `parameters()` generic for obtaining the distribution's parameters.
+* Added `family(<distribution>)` for getting the distribution's family name.
+* Added `covariance()` to return the covariance of a distribution.
+* Added `support()` to identify the distribution's region of support (#8).
+* Added `log_likelihood()` for computing the log-likelihood of observing a 
+  sample from a distribution.
+  
+## Improvements
+
+* `variance()` now always returns a variance. It will not default to providing
+  a covariance matrix for matrices. This also applies to multivariate 
+  distributions such as `dist_multivariate_normal()`. The covariance can now
+  be obtained using the `covariance()` function.
+* `dist_wrap()` can now search for distribution functions in any environment,
+  not just packages. If the `package` argument is `NULL`, it will search the
+  calling environment for the functions. You can also provide a package name as
+  before, and additionally an arbitrary environment to this argument.
+* `median()` methods will now ignore the `na.rm` option when it does not apply
+  to that distribution type (#72).
+* `dist_sample()` now allows for missing values to be stored. Note that 
+  `density()`, `quantile()` and `cdf()` will remove these missing values by
+  default. This behaviour can be changed with the `na.rm` argument.
+* `<hilo>` objects now support non-numeric and multivariate distributions. 
+  `<hilo>` vectors that have different bound types cannot be mixed (#74).
+* Improved performance of default methods of `mean()` and `variance()`, which
+  no longer use sampling based means and variances for univariate continuous
+  distributions (#71, @mjskay)
+* `dist_binomial()` distributions now return integers for `quantile()` and
+  `generate()` methods.
+* Added conditional examples for distributions using functions from supported
+  packages.
+
+## Bug fixes
+
+* Fixed fallback `format()` function for distributions classes that have not
+  defined this method (#67).
+
+## Breaking changes
+
+* `variance()` on a `dist_multivariate_normal()` will now return the diagonal
+  instead of the complete variance-covariance matrix.
+* `dist_bernoulli()` will now return logical values for `quantile()` and 
+  `generate()`.
+
 # distributional 0.2.2
 
 ## New features
@@ -8,7 +65,13 @@
 
 * Improved NA structure of distributions, allowing it to work with `is.na()` and
   `vctrs` vector resizing / filling functionality.
-  
+* Added `as.character(<hilo>)` method, allowing datasets containing `hilo()`
+  objects to be saved as a text file (#57).
+
+## Bug fixes
+
+* Fixed issue with `hdr()` range `size` incorrectly being treated as `100-size`,
+  giving 5% ranges for 95% sizes and vice-versa (#61).
 
 # distributional 0.2.1
 

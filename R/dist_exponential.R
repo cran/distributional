@@ -35,11 +35,6 @@ dist_exponential <- function(rate){
 }
 
 #' @export
-print.dist_exponential <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_exponential <- function(x, digits = 2, ...){
   sprintf(
     "Exp(%s)",
@@ -78,7 +73,7 @@ mean.dist_exponential <- function(x, ...){
 }
 
 #' @export
-variance.dist_exponential <- function(x, ...){
+covariance.dist_exponential <- function(x, ...){
   1/x[["rate"]]^2
 }
 

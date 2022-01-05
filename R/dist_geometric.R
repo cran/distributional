@@ -75,11 +75,6 @@ dist_geometric <- function(prob){
 }
 
 #' @export
-print.dist_geometric <- function(x, ...){
-  cat(format(x, ...))
-}
-
-#' @export
 format.dist_geometric <- function(x, digits = 2, ...){
   sprintf(
     "Geometric(%s)",
@@ -118,7 +113,7 @@ mean.dist_geometric <- function(x, ...){
 }
 
 #' @export
-variance.dist_geometric <- function(x, ...){
+covariance.dist_geometric <- function(x, ...){
   (1 - x[["p"]])/x[["p"]]^2
 }
 
