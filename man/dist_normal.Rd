@@ -4,21 +4,20 @@
 \alias{dist_normal}
 \title{The Normal distribution}
 \usage{
-dist_normal(mu = 0, sigma = 1)
+dist_normal(mu = 0, sigma = 1, mean = mu, sd = sigma)
 }
 \arguments{
-\item{mu}{The mean (location parameter) of the distribution, which is also
+\item{mu, mean}{The mean (location parameter) of the distribution, which is also
 the mean of the distribution. Can be any real number.}
 
-\item{sigma}{The standard deviation (scale parameter) of the distribution.
+\item{sigma, sd}{The standard deviation (scale parameter) of the distribution.
 Can be any positive number. If you would like a Normal distribution with
 \strong{variance} \eqn{\sigma^2}, be sure to take the square root, as this is a
 common source of errors.}
 }
 \description{
-\lifecycle{stable}
-}
-\details{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 The Normal distribution is ubiquitous in statistics, partially because
 of the central limit theorem, which states that sums of i.i.d. random
 variables eventually become Normal. Linear transformations of Normal
@@ -28,7 +27,8 @@ distribution for Z-tests and in simple linear regression. Under
 regularity conditions, maximum likelihood estimators are
 asymptotically Normal. The Normal distribution is also called the
 gaussian distribution.
-
+}
+\details{
 We recommend reading this documentation on
 \url{https://pkg.mitchelloharawild.com/distributional/}, where the math
 will render nicely.

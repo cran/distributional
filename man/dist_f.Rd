@@ -7,14 +7,12 @@
 dist_f(df1, df2, ncp = NULL)
 }
 \arguments{
-\item{df1}{degrees of freedom.  \code{Inf} is allowed.}
-
-\item{df2}{degrees of freedom.  \code{Inf} is allowed.}
+\item{df1, df2}{degrees of freedom.  \code{Inf} is allowed.}
 
 \item{ncp}{non-centrality parameter. If omitted the central F is assumed.}
 }
 \description{
-\lifecycle{stable}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \details{
 We recommend reading this documentation on

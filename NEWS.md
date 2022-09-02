@@ -1,3 +1,33 @@
+# distributional 0.3.1
+
+## New features
+
+* Add Math and Ops methods for sample distribution, which applies the functions
+  directly to the samples.
+* Added `mean` and `sd` as aliases for `mu` and `sigma` respectively in 
+  `dist_normal()` and `dist_student_t()` to match arguments of the stats package
+  interface (#76).
+* Added `scale` argument for alternative specification for `dist_burr()` and
+  `dist_gamma()`.
+
+## Improvements
+
+* Generics introduced by this package now allow `na.rm` and other parameters to
+  be passed to distribution methods, even if these parameters aren't used. The
+  package no longer checks the usage of `...` with the `ellipsis` package, if
+  you'd like to check that all `...` are used, you can write your own wrapping
+  functions.
+* Lists of functions can now be used in `dist_transformed()`, allowing the
+  transformation to differ for each distribution.
+* `covariance()` and other matrix output functions of multivariate distributions
+  now name the result using the distribution's dimension names.
+* Improve handling of mixture distribution quantiles at boundaries {0,1}.
+
+## Bug fixes
+
+* Fixed issue with computing multiple values from a univariate distribution with
+  named dimensions (#79).
+
 # distributional 0.3.0
 
 ## New features

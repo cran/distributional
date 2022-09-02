@@ -95,15 +95,23 @@ dist_apply <- function(x, .f, ...){
   # } else if(length(out[[1]]) > 1) {
   #   out <- suppressMessages(vctrs::vec_rbind(!!!out))
   } else if(multi_arg) {
-    out <- lapply(out, `colnames<-`, dn)
+    if(length(dn) > 1) out <- lapply(out, `colnames<-`, dn)
   } else {
-    out <- vctrs::vec_c(!!!out)
-    if((is.matrix(out) || is.data.frame(out)) && !is.null(dn)){
-      # Set dimension names
-      colnames(out) <- dn
-    }
+    out <- vec_c(!!!out)
+    out <- if(vec_is_list(out))
+      lapply(out, set_matrix_dimnames, dn = dn)
+    else
+      set_matrix_dimnames(out, dn)
   }
   out
+}
+
+set_matrix_dimnames <- function(x, dn) {
+  if((is.matrix(x) || is.data.frame(x)) && !is.null(dn)){
+    # Set dimension names
+    colnames(x) <- dn
+  }
+  x
 }
 
 # inlined from https://github.com/r-lib/cli/blob/master/R/utf8.R

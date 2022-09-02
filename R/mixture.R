@@ -1,6 +1,7 @@
 #' Create a mixture of distributions
 #'
-#' \lifecycle{experimental}
+#' @description
+#' `r lifecycle::badge('maturing')`
 #'
 #' @param ... Distributions to be used in the mixture.
 #' @param weights The weight of each distribution passed to `...`.
@@ -47,6 +48,8 @@ quantile.dist_mixture <- function(x, p, ...){
   # Find bounds for optimisation based on range of each quantile
   dist_q <- vapply(x[["dist"]], quantile, numeric(1L), p, ..., USE.NAMES = FALSE)
   if(vctrs::vec_unique_count(dist_q) == 1) return(dist_q[1])
+  if(p == 0) return(min(dist_q))
+  if(p == 1) return(max(dist_q))
 
   # Search the cdf() for appropriate quantile
   stats::optimise(

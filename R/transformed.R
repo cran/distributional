@@ -1,6 +1,7 @@
 #' Modify a distribution with a transformation
 #'
-#' \lifecycle{experimental}
+#' @description
+#' `r lifecycle::badge('maturing')`
 #'
 #' The [`density()`], [`mean()`], and [`variance()`] methods are approximate as
 #' they are based on numerical derivatives.
@@ -21,10 +22,10 @@
 #' @export
 dist_transformed <- function(dist, transform, inverse){
   vec_is(dist, new_dist())
-  stopifnot(is.function(transform))
-  stopifnot(is.function(inverse))
+  if(is.function(transform)) transform <- list(transform)
+  if(is.function(inverse)) inverse <- list(inverse)
   new_dist(dist = vec_data(dist),
-           transform = list(transform), inverse = list(inverse),
+           transform = transform, inverse = inverse,
            dimnames = dimnames(dist), class = "dist_transformed")
 }
 

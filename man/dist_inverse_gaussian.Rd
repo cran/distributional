@@ -7,14 +7,11 @@
 dist_inverse_gaussian(mean, shape)
 }
 \arguments{
-\item{mean}{parameters. Must be strictly positive. Infinite
-    values are supported.}
-
-\item{shape}{parameters. Must be strictly positive. Infinite
+\item{mean, shape}{parameters. Must be strictly positive. Infinite
     values are supported.}
 }
 \description{
-\lifecycle{stable}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 dist <- dist_inverse_gaussian(mean = c(1,1,1,3,3), shape = c(0.2, 1, 3, 0.2, 1))

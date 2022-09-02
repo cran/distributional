@@ -1,6 +1,6 @@
 Package: distributional
 Title: Vectorised Probability Distributions
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: 
     c(person(given = "Mitchell",
              family = "O'Hara-Wild",
@@ -27,8 +27,8 @@ Description: Vectorised distribution objects with tools for manipulating,
     p/d/q/r functions, other useful statistics can be computed including means,
     variances, intervals, and highest density regions.
 License: GPL-3
-Imports: vctrs (>= 0.3.0), rlang (>= 0.4.5), generics, ellipsis, stats,
-        numDeriv, ggplot2, scales, farver, digest, utils, lifecycle
+Imports: vctrs (>= 0.3.0), rlang (>= 0.4.5), generics, stats, numDeriv,
+        ggplot2, scales, farver, digest, utils, lifecycle
 Suggests: testthat (>= 2.1.0), covr, mvtnorm, actuar (>= 2.0.0), ggdist
 RdMacros: lifecycle
 URL: https://pkg.mitchelloharawild.com/distributional/,
@@ -36,9 +36,9 @@ URL: https://pkg.mitchelloharawild.com/distributional/,
 BugReports: https://github.com/mitchelloharawild/distributional/issues
 Encoding: UTF-8
 Language: en-GB
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 NeedsCompilation: no
-Packaged: 2022-01-05 22:44:02 UTC; mitchell
+Packaged: 2022-09-02 06:29:08 UTC; mitchell
 Author: Mitchell O'Hara-Wild [aut, cre]
     (<https://orcid.org/0000-0001-6729-7695>),
   Matthew Kay [aut] (<https://orcid.org/0000-0001-9446-0419>),
@@ -46,4 +46,4 @@ Author: Mitchell O'Hara-Wild [aut, cre]
   Earo Wang [ctb] (<https://orcid.org/0000-0001-6448-5260>)
 Maintainer: Mitchell O'Hara-Wild <mail@mitchelloharawild.com>
 Repository: CRAN
-Date/Publication: 2022-01-05 23:50:02 UTC
+Date/Publication: 2022-09-02 07:10:02 UTC

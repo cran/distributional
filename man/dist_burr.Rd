@@ -4,17 +4,15 @@
 \alias{dist_burr}
 \title{The Burr distribution}
 \usage{
-dist_burr(shape1, shape2, rate = 1)
+dist_burr(shape1, shape2, rate = 1, scale = 1/rate)
 }
 \arguments{
-\item{shape1}{parameters. Must be strictly positive.}
-
-\item{shape2}{parameters. Must be strictly positive.}
+\item{shape1, shape2, scale}{parameters. Must be strictly positive.}
 
 \item{rate}{an alternative way to specify the scale.}
 }
 \description{
-\lifecycle{stable}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 dist <- dist_burr(shape1 = c(1,1,1,2,3,0.5), shape2 = c(1,2,3,1,1,2))

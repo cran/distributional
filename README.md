@@ -7,12 +7,13 @@
 
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![R build
-status](https://github.com/mitchelloharawild/distributional/workflows/R-CMD-check/badge.svg)](https://github.com/mitchelloharawild/distributional)
+[![R-CMD-check](https://github.com/mitchelloharawild/distributional/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mitchelloharawild/distributional/actions/workflows/R-CMD-check.yaml)
 [![Coverage
 Status](https://codecov.io/gh/mitchelloharawild/distributional/branch/master/graph/badge.svg)](https://codecov.io/github/mitchelloharawild/distributional?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/distributional)](https://CRAN.R-project.org/package=distributional)
+![Download
+count](https://cranlogs.r-pkg.org/badges/last-month/distributional)
 <!-- badges: end -->
 
 The distributional package allows distributions to be used in a
@@ -127,8 +128,6 @@ df <- data.frame(
 ggplot(df, aes(y = factor(name, levels = rev(name)))) +
   stat_dist_halfeye(aes(dist = dist)) + 
   labs(title = "Density function for a mixture of distributions", y = NULL, x = NULL)
-#> Warning: Computation failed in `stat_dist_slabinterval()`:
-#> invalid 'xmin' value
 ```
 
 <img src="man/figures/README-plot-1.png" width="100%" />
