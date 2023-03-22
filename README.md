@@ -8,8 +8,7 @@
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![R-CMD-check](https://github.com/mitchelloharawild/distributional/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mitchelloharawild/distributional/actions/workflows/R-CMD-check.yaml)
-[![Coverage
-Status](https://codecov.io/gh/mitchelloharawild/distributional/branch/master/graph/badge.svg)](https://codecov.io/github/mitchelloharawild/distributional?branch=master)
+<!-- [![Coverage Status](https://codecov.io/gh/mitchelloharawild/distributional/branch/master/graph/badge.svg)](https://codecov.io/github/mitchelloharawild/distributional?branch=master) -->
 [![CRAN
 status](https://www.r-pkg.org/badges/version/distributional)](https://CRAN.R-project.org/package=distributional)
 ![Download
@@ -56,8 +55,9 @@ remotes::install_github("mitchelloharawild/distributional")
 
 ## Examples
 
-Distributions are created using `dist_*()` functions. Currently only the
-normal distribution is supported for testing purposes.
+Distributions are created using `dist_*()` functions. A list of included
+distribution shapes can be found here:
+<https://pkg.mitchelloharawild.com/distributional/reference/>
 
 ``` r
 library(distributional)
@@ -137,20 +137,20 @@ ggplot(df, aes(y = factor(name, levels = rev(name)))) +
 There are several packages which unify interfaces for distributions in
 R:
 
-  - stats provides functions to work with possibly multiple
-    distributions (comparisons made below).
-  - [distributions3](https://cran.r-project.org/package=distributions3)
-    represents singular distributions using S3, with particularly nice
-    documentation. This package makes use of some code and documentation
-    from this package.
-  - [distr](https://cran.r-project.org/package=distr) represents
-    singular distributions using S4.
-  - [distr6](https://cran.r-project.org/package=distr6) represents
-    singular distributions using R6.
-  - Many more in the [CRAN task
-    view](https://cran.r-project.org/view=Distributions)
+- stats provides functions to work with possibly multiple distributions
+  (comparisons made below).
+- [distributions3](https://cran.r-project.org/package=distributions3)
+  represents singular distributions using S3, with particularly nice
+  documentation. This package makes use of some code and documentation
+  from this package.
+- [distr](https://cran.r-project.org/package=distr) represents singular
+  distributions using S4.
+- [distr6](https://cran.r-project.org/package=distr6) represents
+  singular distributions using R6.
+- Many more in the [CRAN task
+  view](https://cran.r-project.org/view=Distributions)
 
 This package differs from the above libraries by storing the
 distributions in a vectorised format. It does this using
 [vctrs](https://vctrs.r-lib.org/), so it should play nicely with the
-tidyverse (try putting distributions into a tibble\!).
+tidyverse (try putting distributions into a tibble!).

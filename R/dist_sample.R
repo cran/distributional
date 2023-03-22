@@ -89,7 +89,7 @@ cdf.dist_sample <- function(x, q, ..., na.rm = TRUE){
     )
   }
   if(length(q) > 1) return(vapply(q, cdf, numeric(1L), x = x, ...))
-  vapply(x, function(x, q) mean(x < q, ..., na.rm = na.rm), numeric(1L), q = q)
+  vapply(x, function(x, q) mean(x <= q, ..., na.rm = na.rm), numeric(1L), q = q)
 }
 
 #' @export
@@ -133,7 +133,8 @@ skewness.dist_sample <- function(x, ..., na.rm = FALSE) {
 #' @export
 Math.dist_sample <- function(x, ...) {
   x <- mapply(.Generic, parameters(x)$x, ..., SIMPLIFY = FALSE)
-  dist_sample(x)
+  names(x) <- "x"
+  enclass_dist(x, "dist_sample")
 }
 
 #' @method Ops dist_sample
@@ -148,5 +149,6 @@ Ops.dist_sample <- function(e1, e2) {
   }
 
   x <- mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
-  dist_sample(x)
+  names(x) <- "x"
+  enclass_dist(x, "dist_sample")
 }

@@ -93,6 +93,7 @@ format.dist_categorical <- function(x, digits = 2, ...){
 #' @export
 density.dist_categorical <- function(x, at, ...){
   if(!is.null(x[["x"]])) at <- match(at, x[["x"]])
+  at[at <= 0] <- NA
   x[["p"]][at]
 }
 
@@ -113,6 +114,15 @@ generate.dist_categorical <- function(x, times, ...){
   )
   if(is.null(x[["x"]])) return(z)
   x[["x"]][z]
+}
+
+#' @export
+support.dist_categorical <- function(x, ...) {
+  region <- if(is.null(x[["p"]])) seq_along(x[["p"]]) else x[["x"]]
+  new_support_region(
+    list(vctrs::vec_init(region, n = 0L)),
+    list(region)
+  )
 }
 
 #' @export

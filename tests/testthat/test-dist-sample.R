@@ -1,4 +1,4 @@
-test_that("Negative Binomial distribution", {
+test_that("Emperical/sample distribution", {
   x <- generate(dist_normal(0, 1), 100)
   dist <- dist_sample(x)
 
@@ -19,4 +19,14 @@ test_that("Negative Binomial distribution", {
   expect_equal(median(dist), median(x[[1]]))
   expect_equal(median(dist[[1]]), median(x[[1]]))
   expect_equal(variance(dist), var(x[[1]]))
+
+  # transform
+  expect_equal(
+    dist,
+    dist + 1 - 1
+  )
+})
+
+test_that("CDF of degenerate dist_sample() is correct", {
+  expect_equal(cdf(dist_sample(list(2)), 2)[[1]], 1)
 })
