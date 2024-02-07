@@ -1,3 +1,12 @@
+# distributional 0.4.0
+
+## Breaking changes
+
+* All graphics related functionality has been removed from the package in favour
+  of the ggdist (https://cran.r-project.org/package=ggdist) package. This
+  breaking change was done to substantially reduce the package's dependencies,
+  focusing the functionality on representing vectors of distributions.
+
 # distributional 0.3.2
 
 Small patch to resolve issues with CRAN checks.
