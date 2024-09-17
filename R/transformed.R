@@ -38,17 +38,54 @@ format.dist_transformed <- function(x, ...){
 }
 
 #' @export
+support.dist_transformed <- function(x, ...) {
+  support <- support(x[["dist"]])
+  lim <- field(support, "lim")[[1]]
+  lim <- suppressWarnings(x[['transform']](lim))
+  if (all(!is.na(lim))) {
+    lim <- sort(lim)
+  }
+  field(support, "lim")[[1]] <- lim
+  support
+}
+
+#' @export
 density.dist_transformed <- function(x, at, ...){
-  density(x[["dist"]], x[["inverse"]](at))*abs(vapply(at, numDeriv::jacobian, numeric(1L), func = x[["inverse"]]))
+  inv <- function(v) suppressWarnings(x[["inverse"]](v))
+  jacobian <- vapply(at, numDeriv::jacobian, numeric(1L), func = inv)
+  d <- density(x[["dist"]], inv(at)) * abs(jacobian)
+  limits <- field(support(x), "lim")[[1]]
+  closed <- field(support(x), "closed")[[1]]
+  if (!any(is.na(limits))) {
+    `%less_than%` <- if (closed[1]) `<` else `<=`
+    `%greater_than%` <- if (closed[2]) `>` else `>=`
+    d[which(at %less_than% limits[1] | at %greater_than% limits[2])] <- 0
+  }
+  d
 }
 
 #' @export
 cdf.dist_transformed <- function(x, q, ...){
-  cdf(x[["dist"]], x[["inverse"]](q), ...)
+  inv <- function(v) suppressWarnings(x[["inverse"]](v))
+  p <- cdf(x[["dist"]], inv(q), ...)
+  # TODO - remove null dist check when dist_na is structured correctly (revdep temp fix)
+  if(!is.null(x[["dist"]]) && !monotonic_increasing(x[["transform"]], support(x[["dist"]]))) p <- 1 - p
+
+  # TODO: Rework for support of closed limits and prevent computation
+  x_sup <- support(x)
+  x_lim <- field(x_sup, "lim")[[1]]
+  x_cls <- field(x_sup, "closed")[[1]]
+  if (!any(is.na(x_lim))) {
+    p[q <= x_lim[1] & !x_cls[1]] <- 0
+    p[q >= x_lim[2] & !x_cls[2]] <- 1
+  }
+  p
 }
 
 #' @export
 quantile.dist_transformed <- function(x, p, ...){
+  # TODO - remove null dist check when dist_na is structured correctly (revdep temp fix)
+  if(!is.null(x[["dist"]]) && !monotonic_increasing(x[["transform"]], support(x[["dist"]]))) p <- 1 - p
   x[["transform"]](quantile(x[["dist"]], p, ...))
 }
 
@@ -94,6 +131,11 @@ Math.dist_transformed <- function(x, ...) {
 #' @method Ops dist_transformed
 #' @export
 Ops.dist_transformed <- function(e1, e2) {
+  if(.Generic %in% c("-", "+") && missing(e2)){
+    e2 <- e1
+    e1 <- if(.Generic == "+") 1 else -1
+    .Generic <- "*"
+  }
   is_dist <- c(inherits(e1, "dist_default"), inherits(e2, "dist_default"))
   trans <- if(all(is_dist)) {
     if(identical(e1$dist, e2$dist)){
@@ -118,4 +160,15 @@ Ops.dist_transformed <- function(e1, e2) {
   }
 
   vec_data(dist_transformed(wrap_dist(list(list(e1,e2)[[which(is_dist)[1]]][["dist"]])), trans, inverse))[[1]]
+}
+
+monotonic_increasing <- function(f, support) {
+  # Shortcut for identity function (used widely in ggdist)
+  if(!is.primitive(f) && identical(body(f), as.name(names(formals(f))))) {
+    return(TRUE)
+  }
+
+  # Currently assumes (without checking, #9) monotonicity of f over the domain
+  x <- f(field(support, "lim")[[1]])
+  isTRUE(x[[2L]] > x[[1L]])
 }

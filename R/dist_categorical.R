@@ -99,12 +99,12 @@ density.dist_categorical <- function(x, at, ...){
 
 #' @export
 quantile.dist_categorical <- function(x, p, ...){
-  NA_real_
+  rep_len(NA_real_, length(p))
 }
 
 #' @export
 cdf.dist_categorical <- function(x, q, ...){
-  NA_real_
+  rep_len(NA_real_, length(q))
 }
 
 #' @export
@@ -121,7 +121,8 @@ support.dist_categorical <- function(x, ...) {
   region <- if(is.null(x[["p"]])) seq_along(x[["p"]]) else x[["x"]]
   new_support_region(
     list(vctrs::vec_init(region, n = 0L)),
-    list(region)
+    list(region),
+    list(c(TRUE, TRUE))
   )
 }
 

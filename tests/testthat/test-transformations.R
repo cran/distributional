@@ -19,13 +19,13 @@ test_that("chains of transformations", {
 
 test_that("handling of transformation arguments", {
   expect_identical(
-    hilo(logb(dist_normal(5, 1), base = 10)),
-    logb(hilo(dist_normal(5, 1)), base = 10)
+    hilo(logb(dist_uniform(0, 100), base = 10)),
+    logb(hilo(dist_uniform(0, 100)), base = 10)
   )
 
   expect_identical(
-    hilo(10^logb(dist_normal(5, 1), base = 10)),
-    10^logb(hilo(dist_normal(5, 1)), base = 10)
+    hilo(10^logb(dist_uniform(0, 100), base = 10)),
+    10^logb(hilo(dist_uniform(0, 100)), base = 10)
   )
 })
 
@@ -114,7 +114,93 @@ test_that("inverses are applied automatically", {
   expect_equal(density(dist * 2 / 2, 0.5), density(dist, 0.5))
 
   # inverting a gamma distribution
+  skip_if_not_installed("actuar")
   expect_equal(density(1/dist_gamma(4, 3), 0.5), density(dist_inverse_gamma(4, 1/3), 0.5))
   expect_equal(density(1/(1/dist_gamma(4, 3)), 0.5), density(dist_gamma(4, 3), 0.5))
 
+})
+
+test_that("transformed distributions' density is 0 outside of the support region", {
+  dist <- dist_wrap('norm')
+  expect_equal(density(exp(dist), 0)[[1]], 0)
+  expect_equal(density(exp(dist), -1)[[1]], 0)
+
+  dist <- dist_wrap('gamma', shape = 1, rate = 1)
+  expect_equal(density(exp(dist), 0)[[1]], 0)
+  expect_equal(density(exp(dist), 1)[[1]], 1)
+})
+
+
+test_that("transformed distributions' cdf is 0/1 outside of the support region", {
+  dist <- dist_wrap('norm')
+  expect_equal(cdf(exp(dist), 0)[[1]], 0)
+  expect_equal(cdf(exp(dist), -1)[[1]], 0)
+  expect_equal(cdf(-1*exp(dist), 0)[[1]], 1)
+  expect_equal(cdf(-1*exp(dist), 2)[[1]], 1)
+})
+
+test_that("unary negation operator works", {
+  dist <- dist_normal(1,1)
+  expect_equal(density(-dist, 0.5), density(dist, -0.5))
+
+  dist <- dist_wrap('norm', mean = 1)
+  expect_equal(density(-dist, 0.5), density(dist, -0.5))
+
+  dist <- dist_student_t(3, mu = 1)
+  expect_equal(density(-dist, 0.5), density(dist, -0.5))
+})
+
+test_that("transformed distributions pdf integrates to 1", {
+  dist_names <- c('norm', 'gamma', 'beta', 'chisq', 'exp',
+                  'logis', 't', 'unif', 'weibull')
+  dist_args <- list(list(mean = 1, sd = 1), list(shape = 2, rate = 1),
+                    list(shape1 = 3, shape2 = 5), list(df = 5),
+                    list(rate = 1),
+                    list(location = 1.5, scale = 1), list(df = 10),
+                    list(min = 0, max = 1), list(shape = 3, scale = 1))
+  names(dist_args) <- dist_names
+  dist <- lapply(dist_names, function(x) do.call(dist_wrap, c(x, dist_args[[x]])))
+  dist <- do.call(c, dist)
+  dfun <- function(x, id, transform) density(get(transform)(dist[id]), x)[[1]]
+  twoexp <- function(x) 2^x
+  square <- function(x) x^2
+  mult2 <- function(x) 2*x
+  identity <- function(x) x
+  tol <- 1e-5
+  for (i in 1:length(dist)) {
+    expect_equal(integrate(dfun, -Inf, Inf, id = i, transform = 'identity')$value, 1, tolerance = tol)
+    expect_equal(integrate(dfun, -Inf, Inf, id = i, transform = 'exp')$value, 1, tolerance = tol)
+    expect_equal(integrate(dfun, -Inf, Inf, id = i, transform = 'twoexp')$value, 1, tolerance = tol)
+    expect_equal(integrate(dfun, -Inf, Inf, id = i, transform = 'mult2')$value, 1, tolerance = tol)
+    lower_bound <- field(support(dist[[i]]), "lim")[[1]][1]
+    if (near(lower_bound, 0)) {
+      expect_equal(integrate(dfun, -Inf, 5, id = i, transform = 'log')$value, 1, tolerance = tol)
+      expect_equal(integrate(dfun, -Inf, Inf, id = i, transform = 'square')$value, 1, tolerance = tol)
+    }
+  }
+})
+
+
+test_that("monotonically decreasing transformations (#100)", {
+  dist <- dist_lognormal()
+
+  expect_equal(
+    quantile(-dist, 0.2), -quantile(dist, 1 - 0.2)
+  )
+  expect_equal(
+    quantile(1/dist, 0.2), 1/quantile(dist, 1 - 0.2)
+  )
+  expect_equal(
+    quantile(-1/dist, 0.7), -1/quantile(dist, 0.7)
+  )
+
+  expect_equal(
+    cdf(-dist, -2), 1 - cdf(dist, 2)
+  )
+  expect_equal(
+    cdf(1/dist, 2), 1 - cdf(dist, 1/2)
+  )
+  expect_equal(
+    cdf(-1/dist, -2), cdf(dist, 1/2)
+  )
 })

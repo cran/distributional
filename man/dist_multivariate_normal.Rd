@@ -16,6 +16,7 @@ dist_multivariate_normal(mu = 0, sigma = diag(1))
 }
 \examples{
 dist <- dist_multivariate_normal(mu = list(c(1,2)), sigma = list(matrix(c(4,2,2,3), ncol=2)))
+dimnames(dist) <- c("x", "y")
 dist
 
 \dontshow{if (requireNamespace("mvtnorm", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -24,12 +25,13 @@ variance(dist)
 support(dist)
 generate(dist, 10)
 
-density(dist, c(2, 1))
-density(dist, c(2, 1), log = TRUE)
+density(dist, cbind(2, 1))
+density(dist, cbind(2, 1), log = TRUE)
 
 cdf(dist, 4)
 
 quantile(dist, 0.7)
+quantile(dist, 0.7, type = "marginal")
 \dontshow{\}) # examplesIf}
 }
 \seealso{

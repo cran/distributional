@@ -41,6 +41,33 @@ format.distribution <- function(x, ...){
   out
 }
 
+#' @importFrom pillar pillar_shaft new_pillar_shaft get_max_extent
+#' @export
+pillar_shaft.distribution <- function(x, ...) {
+  dist = format(x)
+  dist_min = format(x, width = 30)
+
+  pillar::new_pillar_shaft(
+    list(dist = dist,
+         dist_min = dist_min),
+    width = pillar::get_max_extent(dist),
+    min_width = pillar::get_max_extent(dist_min),
+    class = "pillar_distribution"
+  )
+}
+
+#' @export
+#' @importFrom pillar new_ornament
+format.pillar_distribution <- function(x, width, ...) {
+  if (get_max_extent(x$dist) <= width) {
+    ornament <- x$dist
+  } else {
+    ornament <- x$dist_min
+  }
+
+  pillar::new_ornament(ornament, align = "right")
+}
+
 #' @export
 `dimnames<-.distribution` <- function(x, value){
   attr(x, "vars") <- value
@@ -156,10 +183,18 @@ log_cdf.distribution <- function(x, q, ...){
 generate.distribution <- function(x, times, ...){
   times <- vec_cast(times, integer())
   times <- vec_recycle(times, size = length(x))
+  dn <- dimnames(x)
   x <- vec_data(x)
   dist_is_na <- vapply(x, is.null, logical(1L))
   x[dist_is_na] <- list(structure(list(), class = c("dist_na", "dist_default")))
-  mapply(generate, x, times = times, ..., SIMPLIFY = FALSE)
+  mapply(
+    function(x, ...) {
+      y <- generate(x, ...)
+      if (is.matrix(y)) colnames(y) <- dn
+      y
+    }, x, times = times, ...,
+    SIMPLIFY = FALSE
+  )
   # dist_apply(x, generate, times = times, ...)
   # Needs work to structure MV appropriately.
 }

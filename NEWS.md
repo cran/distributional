@@ -1,3 +1,43 @@
+# distributional 0.5.0
+
+## New features
+
+* `support()` now shows whether the interval of support is open or 
+  closed (@venpopov, #97).
+* Added default method for `cdf()` which estimates the CDF using Monte Carlo
+  integration (@robjhyndman, #122).
+
+### Probability distributions
+
+* Added `dist_gk()` for g-and-k distributions.
+* Added `dist_gh()` for g-and-h distributions.
+* Added `dist_gev()` for the Generalised Extreme Value distribution and
+  `dist_gpd()` for the Generalised Pareto distribution (@robjhyndman, #124).
+
+## Improvements
+
+* `dist_mixture()` now displays the components of the mixture when the output
+  width is sufficiently wide (@statasaurus, #112).
+* `generate()` now respects `dimnames()` for multivariate distributions.
+* `dist_mixture()` now supports multivariate distributions (@robjhyndman, #122).
+
+## Bug fixes
+
+* Fixed error when using '-' as a unary operator on a distribution different from
+ `dist_normal()` (@venpopov, #95)
+* Density for transformed distributions now correctly gives 0 instead of NaNs for 
+  values outside the support of the distribution (@venpopov, #97)
+* Fixed `quantile()` and `cdf()` for transformed distributions with 
+  monotonically decreasing transformations (#100).
+* Fixed multivariate `dist_sample()` methods not structuring multivariate 
+  results correctly as matrices.
+* The `cdf()` method for `dist_multivariate_normal()` now gives the P(X <= q)
+  rather than P(X > q) for consistency with all other `cdf()` methods.
+* The `quantile()` method for `dist_multivariate_normal()` now correctly gives
+  the boundaries when `p=0` or `p=1` when `type="equicoordinate"`.
+* The `quantile()` method for `dist_multivariate_normal()` now only square roots
+  the diagonal elements when `type="marginal"`.
+
 # distributional 0.4.0
 
 ## Breaking changes

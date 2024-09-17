@@ -26,11 +26,18 @@ log_quantile.dist_default <- function(x, p, ...){
   quantile(x, exp(p), ...)
 }
 #' @export
-cdf.dist_default <- function(x, ...){
-  abort(
-    sprintf("The distribution class `%s` does not support `cdf()`",
-            class(x)[1])
-  )
+cdf.dist_default <- function(x, q, times = 1e5,...){
+  # Use Monte Carlo integration
+  r <- generate(x, times = times)
+  if(is.list(q)) {
+    # Turn into matrix
+    q <- do.call(rbind, q)
+  }
+  out <- numeric(NROW(q))
+  for(i in seq_along(out)) {
+    out[i] <- mean(apply(sweep(r, 2, q[i,]) < 0, 1, all))
+  }
+  return(out)
 }
 #' @export
 log_cdf.dist_default <- function(x, q, ...){
@@ -69,9 +76,21 @@ family.dist_default <- function(object, ...) {
 
 #' @export
 support.dist_default <- function(x, ...) {
+  lims <- quantile(x, c(0, 1))
+  closed <- if(any(is.na(lims))) {
+    c(FALSE, FALSE)
+  } else {
+    # Default to open limits on error
+    lim_dens <- tryCatch(
+      suppressWarnings(density(x, lims)),
+      error = function(e) c(0,0)
+    )
+    !near(lim_dens, 0)
+  }
   new_support_region(
     list(vctrs::vec_init(generate(x, 1), n = 0L)),
-    list(quantile(x, c(0, 1)))
+    list(lims),
+    list(closed)
   )
 }
 
@@ -177,7 +196,8 @@ print.dist_default <- function(x, ...){
 
 #' @export
 dim.dist_default <- function(x){
-  1
+  # Quick and dirty dimension calculation
+  NCOL(generate(x, times = 1))
 }
 
 invert_fail <- function(...) stop("Inverting transformations for distributions is not yet supported.")
@@ -266,6 +286,11 @@ Math.dist_default <- function(x, ...) {
 #' @method Ops dist_default
 #' @export
 Ops.dist_default <- function(e1, e2) {
+  if(.Generic %in% c("-", "+") && missing(e2)){
+    e2 <- e1
+    e1 <- if(.Generic == "+") 1 else -1
+    .Generic <- "*"
+  }
   is_dist <- c(inherits(e1, "dist_default"), inherits(e2, "dist_default"))
   if(any(vapply(list(e1, e2)[is_dist], dim, numeric(1L)) > 1)){
     stop("Transformations of multivariate distributions are not yet supported.")
