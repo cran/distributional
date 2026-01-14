@@ -141,8 +141,7 @@ R:
   (comparisons made below).
 - [distributions3](https://cran.r-project.org/package=distributions3)
   represents singular distributions using S3, with particularly nice
-  documentation. This package makes use of some code and documentation
-  from this package.
+  documentation.
 - [distr](https://cran.r-project.org/package=distr) represents singular
   distributions using S4.
 - [distr6](https://cran.r-project.org/package=distr6) represents

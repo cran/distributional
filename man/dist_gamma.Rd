@@ -4,7 +4,7 @@
 \alias{dist_gamma}
 \title{The Gamma distribution}
 \usage{
-dist_gamma(shape, rate, scale = 1/rate)
+dist_gamma(shape, rate = 1/scale, scale = 1/rate)
 }
 \arguments{
 \item{shape, scale}{shape and scale parameters.  Must be positive,
@@ -28,9 +28,8 @@ has extensively been used in multivariate methods. More about the Gamma
 distribution will be added soon.
 }
 \details{
-We recommend reading this documentation on
-\url{https://pkg.mitchelloharawild.com/distributional/}, where the math
-will render nicely.
+We recommend reading this documentation on \href{https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html}{pkgdown} which renders math nicely.
+\url{https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html}
 
 In the following, let \eqn{X} be a Gamma random variable
 with parameters

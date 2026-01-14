@@ -95,6 +95,16 @@ support.dist_default <- function(x, ...) {
 }
 
 #' @export
+has_symmetry.dist_default <- function(x, ...){
+  # Crude test that works in *most* cases.
+  # Should be replaced with a more robust check using moments.
+  tryCatch(
+    isTRUE(skewness(x) == 0),
+    error = function(e) FALSE
+  )
+}
+
+#' @export
 mean.dist_default <- function(x, ...){
   x_sup <- support(x)
   dist_type <- field(x_sup, "x")[[1]]
@@ -153,7 +163,18 @@ hilo.dist_default <- function(x, size = 95, ...){
 }
 
 #' @export
-hdr.dist_default <- function(x, size = 95, n = 512, ...){
+hdr.dist_default <- function(x, size = 95, n = 4096, ...){
+  # Use exact quantiles for symmetric distributions
+  if (has_symmetry(x)) {
+    return(
+      new_hdr(
+        lower = list(quantile(x, 0.5 - size/200)),
+        upper = list(quantile(x, 0.5 + size/200)),
+        size = size
+      )
+    )
+  }
+
   dist_x <- quantile(x, seq(0.5/n, 1 - 0.5/n, length.out = n))
   # Remove duplicate values of dist_x from less continuous distributions
   dist_x <- unique(dist_x)

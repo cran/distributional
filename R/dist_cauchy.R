@@ -11,10 +11,8 @@
 #' @inheritParams stats::dcauchy
 #'
 #' @details
-#'
-#'   We recommend reading this documentation on
-#'   <https://pkg.mitchelloharawild.com/distributional/>, where the math
-#'   will render nicely.
+#' 
+#' `r pkgdown_doc_link("dist_cauchy")`
 #'
 #'   In the following, let \eqn{X} be a Cauchy variable with mean
 #'   `location =` \eqn{x_0} and `scale` = \eqn{\gamma}.
@@ -130,3 +128,6 @@ skewness.dist_cauchy <- function(x, ...){
 kurtosis.dist_cauchy <- function(x, ...){
   NA_real_
 }
+
+#' @export
+has_symmetry.dist_cauchy <- function(x, ...) TRUE

@@ -1,4 +1,4 @@
-#' Create a new distribution
+#' Construct distributions
 #'
 #' @description
 #' `r lifecycle::badge('maturing')`
@@ -552,7 +552,9 @@ vec_arith.distribution.default <- function(op, x, y, ...){
     y <- x[["y"]]
     if(is_distribution(y)) y <- vec_data(y)
     x <- x[["x"]]
-    out <- mapply(get(op), x = vec_data(x), y = y, SIMPLIFY = FALSE)
+    out <- .mapply(get(op),
+                   dots = list(x = vec_data(x), y = y),
+                   MoreArgs = NULL)
   }
   vec_restore(out, x)
 }
@@ -563,7 +565,7 @@ vec_arith.numeric.distribution <- function(op, x, y, ...){
   x <- vec_recycle_common(x = x, y = y)
   y <- x[["y"]]
   x <- x[["x"]]
-  out <- mapply(get(op), x = x, y = vec_data(y), SIMPLIFY = FALSE)
+  out <- .mapply(get(op), list(x = x, y = vec_data(y)), MoreArgs = NULL)
   vec_restore(out, y)
 }
 
@@ -627,5 +629,37 @@ vec_cast.character.distribution <- function(x, to, ...){
 #' is_distribution("distributional")
 #' @export
 is_distribution <- function(x) {
-    inherits(x, "distribution")
+  inherits(x, "distribution")
+}
+
+
+#' Check if a distribution is symmetric
+#'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#' Determines whether a probability distribution is symmetric around its center.
+#'
+#' @param x The distribution(s).
+#' @param ... Additional arguments used by methods.
+#'
+#' @return A logical value indicating whether the distribution is symmetric.
+#'
+#' @examples
+#' # Normal distribution is symmetric
+#' has_symmetry(dist_normal(mu = 0, sigma = 1))
+#' has_symmetry(dist_normal(mu = 5, sigma = 2))
+#'
+#' # Beta distribution symmetry depends on parameters
+#' has_symmetry(dist_beta(shape1 = 2, shape2 = 2))  # symmetric
+#' has_symmetry(dist_beta(shape1 = 2, shape2 = 5))  # not symmetric
+#'
+#' @export
+has_symmetry <- function(x, ...) {
+  UseMethod("has_symmetry")
+}
+
+#' @export
+has_symmetry.distribution <- function(x, ...) {
+  dist_apply(x, has_symmetry, ...)
 }

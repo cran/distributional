@@ -19,9 +19,7 @@
 #'
 #' @details
 #'
-#'   We recommend reading this documentation on
-#'   <https://pkg.mitchelloharawild.com/distributional/>, where the math
-#'   will render nicely.
+#' `r pkgdown_doc_link("dist_gamma")`
 #'
 #'   In the following, let \eqn{X} be a Gamma random variable
 #'   with parameters
@@ -80,8 +78,11 @@
 #'
 #' @name dist_gamma
 #' @export
-dist_gamma <- function(shape, rate, scale = 1/rate){
+dist_gamma <- function(shape, rate = 1/scale, scale = 1/rate){
   shape <- vec_cast(shape, double())
+  if(missing(rate) && missing(scale)) {
+    abort("Either the `rate` or `scale` must be specified for Gamma distributions.")
+  }
   rate <- vec_cast(rate, double())
   if(any(shape[!is.na(shape)] < 0)){
     abort("The shape parameter of a Gamma distribution must be non-negative.")

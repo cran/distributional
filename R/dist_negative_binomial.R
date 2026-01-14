@@ -8,13 +8,13 @@
 #' a specified number of successes (`size`) occur. The probability of success in
 #' each trial is given by `prob`.
 #'
-#' @inheritParams stats::NegBinomial
+#' @param size The number of successful trials (target number of successes).
+#'   Must be a positive number. Also called the dispersion parameter.
+#' @param prob The probability of success in each trial. Must be between 0 and 1.
 #'
 #' @details
 #'
-#'   We recommend reading this documentation on
-#'   <https://pkg.mitchelloharawild.com/distributional/>, where the math
-#'   will render nicely.
+#' `r pkgdown_doc_link("dist_negative_binomial")`
 #'
 #'   In the following, let \eqn{X} be a Negative Binomial random variable with
 #'   success probability `prob` = \eqn{p} and the number of successes `size` =
@@ -23,28 +23,51 @@
 #'
 #'   **Support**: \eqn{\{0, 1, 2, 3, ...\}}
 #'
-#'   **Mean**: \eqn{\frac{p r}{1-p}}
+#'   **Mean**: \eqn{\frac{r(1-p)}{p}}
 #'
-#'   **Variance**: \eqn{\frac{pr}{(1-p)^2}}
+#'   **Variance**: \eqn{\frac{r(1-p)}{p^2}}
 #'
 #'   **Probability mass function (p.m.f)**:
 #'
 #'   \deqn{
-#'      f(k) = {k + r - 1 \choose k} \cdot (1-p)^r p^k
+#'      P(X = k) = \binom{k + r - 1}{k} (1-p)^r p^k
 #'   }{
-#'      f(k) = (k+r-1)!/(k!(r-1)!) (1-p)^r p^k
+#'      P(X = k) = choose(k+r-1, k) * (1-p)^r * p^k
 #'   }
 #'
 #'   **Cumulative distribution function (c.d.f)**:
 #'
-#'   Too nasty, omitted.
+#'   \deqn{
+#'      F(k) = \sum_{i=0}^{\lfloor k \rfloor} \binom{i + r - 1}{i} (1-p)^r p^i
+#'   }{
+#'      F(k) = sum_{i=0}^floor(k) choose(i+r-1, i) * (1-p)^r * p^i
+#'   }
+#'
+#'   This can also be expressed in terms of the regularized incomplete beta
+#'   function, and is computed numerically.
 #'
 #'   **Moment generating function (m.g.f)**:
 #'
 #'   \deqn{
-#'      \left(\frac{1-p}{1-pe^t}\right)^r, t < -\log p
+#'      E(e^{tX}) = \left(\frac{1-p}{1-pe^t}\right)^r, \quad t < -\log p
 #'   }{
-#'      \frac{(1-p)^r}{(1-pe^t)^r}, t < -\log p
+#'      E(e^(tX)) = ((1-p)/(1-p*e^t))^r, t < -log p
+#'   }
+#'
+#'   **Skewness**:
+#'
+#'   \deqn{
+#'      \gamma_1 = \frac{2-p}{\sqrt{r(1-p)}}
+#'   }{
+#'      \gamma_1 = (2-p) / sqrt(r(1-p))
+#'   }
+#'
+#'   **Excess Kurtosis**:
+#'
+#'   \deqn{
+#'      \gamma_2 = \frac{6}{r} + \frac{p^2}{r(1-p)}
+#'   }{
+#'      \gamma_2 = 6/r + p^2/(r(1-p))
 #'   }
 #'
 #' @seealso [stats::NegBinomial]
@@ -124,10 +147,10 @@ covariance.dist_negbin <- function(x, ...){
 
 #' @export
 skewness.dist_negbin <- function(x, ...) {
-  (1 + x[["p"]]) / sqrt(x[["p"]] * x[["n"]])
+  (2 - x[["p"]]) / sqrt(x[["n"]] * (1 - x[["p"]]))
 }
 
 #' @export
 kurtosis.dist_negbin <- function(x, ...) {
-  6 / x[["n"]] + (1 - x[["p"]])^2 / x[["n"]] * x[["p"]]
+  6 / x[["n"]] + x[["p"]]^2 / (x[["n"]] * (1 - x[["p"]]))
 }

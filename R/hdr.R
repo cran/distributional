@@ -26,9 +26,10 @@ new_hdr <- function(lower = list_of(.ptype = double()),
 
 
   out <- vec_recycle_common(lower = lower, upper = upper)
-  mapply(
+  .mapply(
     function(l,u) if (any(u<l, na.rm = TRUE)) abort("`upper` can't be lower than `lower`."),
-    l = out[["lower"]], u = out[["upper"]]
+    list(l = out[["lower"]], u = out[["upper"]]),
+    MoreArgs = NULL
   )
   out[["level"]] <- vctrs::vec_recycle(size, vec_size(out[[1]]))
 
@@ -67,7 +68,7 @@ is_hdr <- function(x) {
 
 #' @export
 format.hdr <- function(x, justify = "right", ...) {
-  out <- mapply(function(l,u,s) {
+  out <- .mapply(function(l,u,s) {
     limit <- paste(
       format(l, justify = justify, ...),
       format(u, justify = justify, ...),
@@ -75,6 +76,6 @@ format.hdr <- function(x, justify = "right", ...) {
     )
     limit <- paste0("[", limit, "]", collapse = "")
     paste0(limit, s)
-  }, l = field(x, "lower"), u = field(x, "upper"), s = field(x, "level"))
+  }, list(l = field(x, "lower"), u = field(x, "upper"), s = field(x, "level")), MoreArgs = NULL)
   as.vector(out, "character")
 }

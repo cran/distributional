@@ -1,3 +1,40 @@
+# distributional 0.6.0
+
+Extensively updated documentation for each distribution to include additional details about the statistics associated with each distribution.
+
+## New features
+
+* Added `has_symmetry()` generic to identify if a distribution is symmetric.
+
+### Probability distributions
+
+* Added `dist_laplace()` for the Laplace distribution.
+* Added `dist_multivariate_t()` for the multivariate t-distribution.
+
+## Improvements
+
+* Extended documentation for many distributions to include detailed 
+  mathematical formulas for the statistics of each distribution (#141).
+* `hdr()` now produces exact results for symmetric distributions (#123).
+* `hdr()` uses more quantiles by default (512 -> 4096) for more accurate HDRs (#123).
+* Transformed distributions now work better for monotonic increasing functions 
+  when the domain of the untransformed distribution is R (#129).
+* Added `cdf()` and `quantile()` methods for dist_categorical() distributions with
+  ordered factors (#136).
+* Added `support()` method for `dist_gpd()` distributions.
+* Added `cdf()` method for `dist_multinomial()` distributions.
+
+## Bug fixes
+
+* Fixed `dist_gamma()` not allowing the `scale` parameter to be used (#132).
+* Fixed `dist_negative_binomial()` calculation of skewness and kurtosis for p!=0.5.
+* Fixed floating point issue that caused `dist_mixture()` to incorrectly throw an error when weights did sum to 1 (@statasaurus, #134)
+
+## Breaking changes
+
+* The `type` argument for `dist_multivariate_normal()`'s `quantile()` method 
+  has been renamed to `kind` to avoid name clashes with `quantile.default()`.
+
 # distributional 0.5.0
 
 ## New features

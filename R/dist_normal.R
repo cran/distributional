@@ -22,9 +22,8 @@
 #'
 #' @details
 #'
-#'   We recommend reading this documentation on
-#'   <https://pkg.mitchelloharawild.com/distributional/>, where the math
-#'   will render nicely.
+#' `r pkgdown_doc_link("dist_normal")`
+#'
 #'
 #'   In the following, let \eqn{X} be a Normal random variable with mean
 #'   `mu` = \eqn{\mu} and standard deviation `sigma` = \eqn{\sigma}.
@@ -45,15 +44,13 @@
 #'
 #'   **Cumulative distribution function (c.d.f)**:
 #'
-#'   The cumulative distribution function has the form
-#'
 #'   \deqn{
 #'     F(t) = \int_{-\infty}^t \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-(x - \mu)^2 / 2 \sigma^2} dx
 #'   }{
 #'     F(t) = integral_{-\infty}^t 1 / sqrt(2 \pi \sigma^2) exp(-(x - \mu)^2 / (2 \sigma^2)) dx
 #'   }
 #'
-#'   but this integral does not have a closed form solution and must be
+#'   This integral does not have a closed form solution and is
 #'   approximated numerically. The c.d.f. of a standard Normal is sometimes
 #'   called the "error function". The notation \eqn{\Phi(t)} also stands
 #'   for the c.d.f. of a standard Normal evaluated at \eqn{t}. Z-tables
@@ -87,6 +84,7 @@
 #'
 #' quantile(dist, 0.7)
 #'
+#' @name dist_normal
 #' @export
 dist_normal <- function(mu = 0, sigma = 1, mean = mu, sd = sigma){
   mean <- vec_cast(mean, double())
@@ -154,6 +152,9 @@ skewness.dist_normal <- function(x, ...) 0
 
 #' @export
 kurtosis.dist_normal <- function(x, ...) 0
+
+#' @export
+has_symmetry.dist_normal <- function(x, ...) TRUE
 
 #' @export
 Ops.dist_normal <- function(e1, e2){

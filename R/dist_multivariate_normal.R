@@ -3,10 +3,64 @@
 #' @description
 #' `r lifecycle::badge('stable')`
 #'
+#' The multivariate normal distribution is a generalization of the univariate
+#' normal distribution to higher dimensions. It is widely used in multivariate
+#' statistics and describes the joint distribution of multiple correlated
+#' continuous random variables.
+#'
 #' @param mu A list of numeric vectors for the distribution's mean.
 #' @param sigma A list of matrices for the distribution's variance-covariance matrix.
 #'
-#' @seealso [mvtnorm::dmvnorm], [mvtnorm::qmvnorm]
+#' @details
+#'
+#' `r pkgdown_doc_link("dist_multivariate_normal")`
+#'
+#'   In the following, let \eqn{\mathbf{X}} be a \eqn{k}-dimensional multivariate
+#'   normal random variable with mean vector `mu` = \eqn{\boldsymbol{\mu}} and
+#'   variance-covariance matrix `sigma` = \eqn{\boldsymbol{\Sigma}}.
+#'
+#'   **Support**: \eqn{\mathbf{x} \in \mathbb{R}^k}
+#'
+#'   **Mean**: \eqn{\boldsymbol{\mu}}
+#'
+#'   **Variance-covariance matrix**: \eqn{\boldsymbol{\Sigma}}
+#'
+#'   **Probability density function (p.d.f)**:
+#'
+#'   \deqn{
+#'     f(\mathbf{x}) = \frac{1}{(2\pi)^{k/2} |\boldsymbol{\Sigma}|^{1/2}}
+#'     \exp\left(-\frac{1}{2}(\mathbf{x} - \boldsymbol{\mu})^T
+#'     \boldsymbol{\Sigma}^{-1}(\mathbf{x} - \boldsymbol{\mu})\right)
+#'   }{
+#'     f(x) = 1 / ((2\pi)^(k/2) |\Sigma|^(1/2))
+#'     exp(-1/2 (x - \mu)^T \Sigma^(-1) (x - \mu))
+#'   }
+#'
+#'   where \eqn{|\boldsymbol{\Sigma}|}{|\Sigma|} is the determinant of
+#'   \eqn{\boldsymbol{\Sigma}}{\Sigma}.
+#'
+#'   **Cumulative distribution function (c.d.f)**:
+#'
+#'   \deqn{
+#'     P(\mathbf{X} \le \mathbf{q}) = P(X_1 \le q_1, \ldots, X_k \le q_k)
+#'   }{
+#'     P(X \le q) = P(X_1 \le q_1, ..., X_k \le q_k)
+#'   }
+#'
+#'   The c.d.f. does not have a closed-form expression and is computed numerically.
+#'
+#'   **Moment generating function (m.g.f)**:
+#'
+#'   \deqn{
+#'     M(\mathbf{t}) = E(e^{\mathbf{t}^T \mathbf{X}}) =
+#'     \exp\left(\mathbf{t}^T \boldsymbol{\mu} + \frac{1}{2}\mathbf{t}^T
+#'     \boldsymbol{\Sigma} \mathbf{t}\right)
+#'   }{
+#'     M(t) = E(e^(t^T X)) = exp(t^T \mu + 1/2 t^T \Sigma t)
+#'   }
+#'
+#' @seealso [mvtnorm::dmvnorm()], [mvtnorm::pmvnorm()], [mvtnorm::qmvnorm()],
+#'   [mvtnorm::rmvnorm()]
 #'
 #' @examples
 #' dist <- dist_multivariate_normal(mu = list(c(1,2)), sigma = list(matrix(c(4,2,2,3), ncol=2)))
@@ -24,8 +78,8 @@
 #'
 #' cdf(dist, 4)
 #'
-#' quantile(dist, 0.7)
-#' quantile(dist, 0.7, type = "marginal")
+#' quantile(dist, 0.7, kind = "equicoordinate")
+#' quantile(dist, 0.7, kind = "marginal")
 #'
 #' @export
 dist_multivariate_normal <- function(mu = 0, sigma = diag(1)){
@@ -56,10 +110,18 @@ log_density.dist_mvnorm <- function(x, at, ..., na.rm = FALSE){
 }
 
 #' @export
-quantile.dist_mvnorm <- function(x, p, type = c("marginal", "equicoordinate"),
-                                 ..., na.rm = FALSE){
-  type <- match.arg(type)
-  q <- if (type == "marginal") {
+quantile.dist_mvnorm <- function(x, p, kind = c("marginal", "equicoordinate"),
+                                 ..., type = lifecycle::deprecated(), na.rm = FALSE){
+  if (lifecycle::is_present(type)) {
+    lifecycle::deprecate_warn(
+      "0.6.0", "quantile.dist_mvnorm(type)", "quantile.dist_mvnorm(kind)",
+      # Force removal of the 'contact author' footer since it doesn't work here.
+      user_env = .GlobalEnv
+    )
+    kind <- type
+  }
+  kind <- match.arg(kind)
+  q <- if (kind == "marginal") {
     stats::qnorm(p, mean = rep(x[["mu"]], each = length(p)),
                  sd = rep(sqrt(diag(x[["sigma"]])), each = length(p)), ...)
   } else {
@@ -90,6 +152,9 @@ generate.dist_mvnorm <- function(x, times, ..., na.rm = FALSE){
 mean.dist_mvnorm <- function(x, ...){
   matrix(x[["mu"]], nrow = 1)
 }
+
+#' @export
+median.dist_mvnorm <- mean.dist_mvnorm
 
 #' @export
 covariance.dist_mvnorm <- function(x, ...){
