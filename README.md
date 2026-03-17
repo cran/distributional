@@ -130,7 +130,7 @@ ggplot(df, aes(y = factor(name, levels = rev(name)))) +
   labs(title = "Density function for a mixture of distributions", y = NULL, x = NULL)
 ```
 
-<img src="man/figures/README-plot-1.png" width="100%" />
+<img src="man/figures/README-plot-1.png" alt="Half-eye plot showing density functions for three distributions: a Gamma(2,1), a Normal(5,1), and a mixture of both with weights 0.4 and 0.6 respectively. The mixture distribution appears bimodal, with a smaller mode near 2 (inherited from the right-skewed Gamma component) and a larger, more prominent mode near 5 (from the Normal component), reflecting the 0.4 and 0.6 weights assigned to each component." width="100%" />
 
 ## Related work
 

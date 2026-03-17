@@ -1,6 +1,6 @@
-d1b73d68c6369b6ef6278788e046c78e *DESCRIPTION
-181e9456bbafdaa8833fb57407eaef9f *NAMESPACE
-520fba42275810bb48a6cb627a9a117c *NEWS.md
+47aee5e00565fe93b1d31ce303b260e5 *DESCRIPTION
+c689df9e90934178a616bbb3048a90a7 *NAMESPACE
+96551737647e43e0c11e55841e59802f *NEWS.md
 87d3c13f1eeff7544722bdc2420be081 *R/default.R
 6c1ad28b78fcd0c080f8d34a05433460 *R/dist_bernoulli.R
 dc43681fa6e29be1aafb25d54e2c7183 *R/dist_beta.R
@@ -10,6 +10,7 @@ e553e5de7e579141df9dd65a99102e8f *R/dist_categorical.R
 53cb3790bb9795a7064f42186fcd05c7 *R/dist_cauchy.R
 1b7658b0a5e7a9f506ad03e57deb686b *R/dist_chisq.R
 6c78897fd1ada1945b96343fcdb76112 *R/dist_degenerate.R
+7bd51a2d2f346b48a3e824abf5a0d4f5 *R/dist_dirichlet.R
 38b9536e1e4757972d5c53e623bc9f10 *R/dist_exponential.R
 8b809d6c869199eff99b1473c329761d *R/dist_f.R
 3a4620b9047b9329f2d5f6b0906a3c6e *R/dist_gamma.R
@@ -19,6 +20,7 @@ e553e5de7e579141df9dd65a99102e8f *R/dist_categorical.R
 bf135f178469eb3454a62252d80755e9 *R/dist_gk.R
 098e0503ae29c7722509a65b6749b19e *R/dist_gpd.R
 dc76df793b9ac313ddf8e11dc8e56b84 *R/dist_gumbel.R
+7678aebe9527cdfed24a8e0ecad4ea3a *R/dist_horseshoe.R
 e44ec5f5f34812b8d02236bd5a6de641 *R/dist_hypergeometric.R
 f3582064d19f827653ed0f532857185e *R/dist_inflated.R
 492dc5e9b3fe4a6dbb94ea9b7cd9fa13 *R/dist_inverse_exponential.R
@@ -31,7 +33,7 @@ bfe9442538556f60e5b92b03c4f98a7f *R/dist_logarithmic.R
 b717e18f3f302804854a656f73dd8e81 *R/dist_missing.R
 5864484934ec3f1252e781b617c30f3e *R/dist_mixture.R
 ff7dd42c3208eccf562f6238c86338d3 *R/dist_multinomial.R
-b456daa319606a25b23353649fdc2fef *R/dist_multivariate_normal.R
+22ab16665a733ad5b23945af6003201f *R/dist_multivariate_normal.R
 fa05dd5aee84eef3240adfb9b40e1ee8 *R/dist_multivariate_t.R
 bb8315831c75db335eb1b3be4b7eb686 *R/dist_negative_binomial.R
 844e525afa0886e791a4e17a0ef155e8 *R/dist_normal.R
@@ -52,9 +54,9 @@ ffb71983be3681c86021ae7d15341027 *R/distributional-package.R
 c1256209192fb4e9f8de412047c8946e *R/hdr.R
 ee9e87cbb170b0c8965763f42accf30c *R/hilo.R
 c0ea658b5cab1732627259bc8885988a *R/reexports.R
-4d1c5b0ec4898a63218919e293999951 *R/support.R
+37d4f4dc622b252a55fca1cac021a874 *R/support.R
 68a296b724f91b4a7b8a07080bc6aac1 *R/utils.R
-de6e6606a975b15f1b3d7c82a0a80adc *README.md
+0f8ba6cd0ae08dcd0af2681df8f0e7c2 *README.md
 7f4496b2c3ab1c9dfe9f421cced55827 *man/cdf.Rd
 e3c345c3d92b4a371a98683cf42691ae *man/covariance.Rd
 b5682bb0e93de8c91011b23a3d18f010 *man/covariance.distribution.Rd
@@ -67,6 +69,7 @@ ab82dc66e159206531bfe27f235a9117 *man/dist_categorical.Rd
 42eb2f1918da66e331a25b648965247f *man/dist_cauchy.Rd
 1a90cf102d9b471844d47a11b2d272a7 *man/dist_chisq.Rd
 8cb644ed1ee6716b0c5bf3cc69976830 *man/dist_degenerate.Rd
+20edc65a7643d5030c8bcb19b8dde29a *man/dist_dirichlet.Rd
 68184b765b5859ea26e12d3eeb840f58 *man/dist_exponential.Rd
 87f7d447796be5c7f9c22cbfa66efbff *man/dist_f.Rd
 f336b3a2015aad5cc15e0174edeb9ef7 *man/dist_gamma.Rd
@@ -76,6 +79,7 @@ bd26cf3b4ad0581053add69edce01032 *man/dist_gh.Rd
 ca40b309521f46bffa4b16c310c1b5f7 *man/dist_gk.Rd
 e861fb9fa48dc833a45ff58dbf0c7ad0 *man/dist_gpd.Rd
 be30743520ee252a1b97caa1eb3ed71a *man/dist_gumbel.Rd
+b1810fcffc946614c1202a5ad74a2c27 *man/dist_horseshoe.Rd
 f89a348a55a8687bc7e3165cdd1acc20 *man/dist_hypergeometric.Rd
 cdc481ad870b8c78f8ada89cc31bf18e *man/dist_inflated.Rd
 aa653096f6b1c0c5d7c44c4bd10e83ee *man/dist_inverse_exponential.Rd
@@ -88,7 +92,7 @@ ee30c6d5fc805e39b8fe468c8dbad44d *man/dist_logarithmic.Rd
 8d37c832a060d227077659cb3ec22fb0 *man/dist_missing.Rd
 4a44ac2bf3c10149c89fa80fc43443b9 *man/dist_mixture.Rd
 0bf83c7f52ff91b2c9c3a138283540f4 *man/dist_multinomial.Rd
-a487fe4256bec04bdbf4bb255c2fbcde *man/dist_multivariate_normal.Rd
+d50d8fbb879a3c49e5b4c3b2fa8c8208 *man/dist_multivariate_normal.Rd
 8d0a5ccf109b631713bbaf4a2f391485 *man/dist_multivariate_t.Rd
 0c7acfb7a8bed8e924e7d650501e455a *man/dist_negative_binomial.Rd
 c6b7089d8f3b12ff7e2b4634bf677e57 *man/dist_normal.Rd
@@ -106,7 +110,7 @@ c4d29461e05ee593ce7cf8ba133e1eab *man/dist_weibull.Rd
 b0351f0ac9127d3f9bcb94eae9dafbc4 *man/dist_wrap.Rd
 19a58490ca339df3fe626059ce24b7a2 *man/distributional-package.Rd
 20025842953d1cd5981027989f5cd274 *man/family.distribution.Rd
-d8bfd7225d4236c2eb773a282275d515 *man/figures/README-plot-1.png
+074b6a0e53c912a4584267ba465a39f4 *man/figures/README-plot-1.png
 cb1e46f469cfbbbde29c8b5113e1d789 *man/figures/lifecycle-archived.svg
 c0d2e5a54f1fa4ff02bf9533079dd1f7 *man/figures/lifecycle-defunct.svg
 a1b8c987c676c16af790f563f96cbb1f *man/figures/lifecycle-deprecated.svg
@@ -151,6 +155,7 @@ f9e4e4131783f7237d4f97dfe72fbe3a *tests/testthat/test-dist-burr.R
 c0267778b901e4a3691a6be6e1461687 *tests/testthat/test-dist-cauchy.R
 46065b755f643e6d67e14b3dbbab2f43 *tests/testthat/test-dist-chisq.R
 c2bc05c26f197ef3e2d532f76e6dcd16 *tests/testthat/test-dist-degenerate.R
+2e3b895d8357040d844dd910ee8a3f5b *tests/testthat/test-dist-dirichlet.R
 1a43b2c7b3a8d43de284e9b6ffc01fd8 *tests/testthat/test-dist-exponential.R
 028b728b08ac8f88871d0b8b5f4881d2 *tests/testthat/test-dist-f.R
 d682147ddb5e7d006cd3b6f33a1bdb55 *tests/testthat/test-dist-gamma.R
@@ -158,6 +163,7 @@ ffdfbf31992e228107c0d64534549edd *tests/testthat/test-dist-geometric.R
 5c622b05e2e1828aa98c78f655689ee1 *tests/testthat/test-dist-gh.R
 ce777d0eb221c8ce4708c11f792bb142 *tests/testthat/test-dist-gk.R
 c857ddebb4f3ef4436cb234c87b2abc0 *tests/testthat/test-dist-gumbel.R
+da3d8832a88bd9004589bd13c1e6fa20 *tests/testthat/test-dist-horseshoe.R
 3c203e6e7e503d1d611abe46e84064a1 *tests/testthat/test-dist-hypergeometric.R
 50b33bef9f581dddf82060fc0e9a84f9 *tests/testthat/test-dist-inverse-exponential.R
 661e60cc3d1cce040072848183fa3a94 *tests/testthat/test-dist-inverse-gamma.R

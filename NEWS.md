@@ -1,3 +1,17 @@
+# distributional 0.7.0
+
+## Improvements
+
+* Fixed default argument `sigma` for `dist_multivariate_normal()` (#118).
+* Improved formatting of support regions for limited multivariate support regions.
+
+## New features
+
+### Probability distributions
+
+* Added `dist_dirichlet()` for the Dirichlet distribution (#146).
+* Added `dist_horseshoe()` for the Horseshoe distribution.
+
 # distributional 0.6.0
 
 Extensively updated documentation for each distribution to include additional details about the statistics associated with each distribution.

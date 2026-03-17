@@ -1,6 +1,6 @@
 Package: distributional
 Title: Vectorised Probability Distributions
-Version: 0.6.0
+Version: 0.7.0
 Authors@R: 
     c(person(given = "Mitchell",
              family = "O'Hara-Wild",
@@ -39,7 +39,7 @@ Depends: R (>= 4.0.0)
 Imports: vctrs (>= 0.3.0), rlang (>= 0.4.5), generics, stats, numDeriv,
         utils, lifecycle, pillar
 Suggests: testthat (>= 2.1.0), covr, mvtnorm, actuar (>= 2.0.0), evd,
-        ggdist, ggplot2, gk, pkgdown
+        ggdist, ggplot2, gk, LaplacesDemon, pkgdown
 RdMacros: lifecycle
 URL: https://pkg.mitchelloharawild.com/distributional/,
         https://github.com/mitchelloharawild/distributional
@@ -48,7 +48,7 @@ Encoding: UTF-8
 Language: en-GB
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2026-01-14 10:04:53 UTC; mitchell
+Packaged: 2026-03-17 07:17:03 UTC; mitchell
 Author: Mitchell O'Hara-Wild [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-6729-7695>),
   Matthew Kay [aut] (ORCID: <https://orcid.org/0000-0001-9446-0419>),
@@ -58,4 +58,4 @@ Author: Mitchell O'Hara-Wild [aut, cre] (ORCID:
   Vencislav Popov [ctb] (ORCID: <https://orcid.org/0000-0002-8073-4199>)
 Maintainer: Mitchell O'Hara-Wild <mail@mitchelloharawild.com>
 Repository: CRAN
-Date/Publication: 2026-01-14 10:50:03 UTC
+Date/Publication: 2026-03-17 08:30:44 UTC
