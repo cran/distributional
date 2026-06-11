@@ -1,3 +1,14 @@
+# distributional 0.7.1
+
+## Improvements
+
+* Non-finite boundaries for truncated distributions now use open brackets.
+* Added vectorised `p` support in `quantile()` for inflated distributions (#151).
+
+## Bug fixes
+
+* Fixed `density()` error when multivariate distribution parameters contain names (#150).
+
 # distributional 0.7.0
 
 ## Improvements
