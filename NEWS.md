@@ -1,3 +1,25 @@
+# distributional 0.8.0
+
+## New features
+
+* `dist_mixture()` gains a `type` argument supporting both probability mixtures
+  (`type = "probability"`, the default, existing behaviour) and quantile
+  mixtures (`type = "quantile"`). A quantile mixture (Vincentization) defines
+  the quantile function as a weighted average of the component quantile
+  functions: Q(p) = sum(w_i * Q_i(p)). Its CDF and density are computed
+  numerically from this quantile function.
+
+* Added `dist_convolved()` for the distribution of the sum of two independent
+  random variables, computed via FFT-based numerical convolution (#106).
+  The `+` and `-` operators now automatically produce a `dist_convolved` object
+  for distribution families without a known closed-form sum. Distributions with 
+  known closed-form sums (e.g. `dist_normal(1, 2) + dist_normal(3, 1)`) continue
+  to produce exact results.
+
+* Added `dist_quantile()` as the primary interface for the quantile/percentile 
+  distribution, accepting probabilities on the \[0, 1\] scale. 
+  `dist_percentile()` is now an alias that accepts the \[0, 100\] scale (#116).
+
 # distributional 0.7.1
 
 ## Improvements

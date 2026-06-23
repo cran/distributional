@@ -1,6 +1,6 @@
 Package: distributional
 Title: Vectorised Probability Distributions
-Version: 0.7.1
+Version: 0.8.0
 Authors@R: 
     c(person(given = "Mitchell",
              family = "O'Hara-Wild",
@@ -48,7 +48,7 @@ Encoding: UTF-8
 Language: en-GB
 Config/roxygen2/version: 8.0.0
 NeedsCompilation: no
-Packaged: 2026-06-10 21:48:46 UTC; mitchell
+Packaged: 2026-06-23 15:39:44 UTC; mitchell
 Author: Mitchell O'Hara-Wild [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-6729-7695>),
   Matthew Kay [aut] (ORCID: <https://orcid.org/0000-0001-9446-0419>),
@@ -58,4 +58,4 @@ Author: Mitchell O'Hara-Wild [aut, cre] (ORCID:
   Vencislav Popov [ctb] (ORCID: <https://orcid.org/0000-0002-8073-4199>)
 Maintainer: Mitchell O'Hara-Wild <mail@mitchelloharawild.com>
 Repository: CRAN
-Date/Publication: 2026-06-11 05:10:13 UTC
+Date/Publication: 2026-06-23 16:30:02 UTC
