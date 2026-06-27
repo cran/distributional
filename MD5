@@ -1,7 +1,7 @@
-ad0927c9828160291e110672f31fdc69 *DESCRIPTION
-fc828906902bc27cf51a73c07f8db13e *NAMESPACE
-7e539a39482bdee938943757caa79d99 *NEWS.md
-88e9a0269bee3f9f5cd7d0f4475caded *R/default.R
+8b89d2d0fe7ba1532d4d2f5b350901d9 *DESCRIPTION
+f1d600ee087ad45786a133a4d1d0e581 *NAMESPACE
+82f696cdef9e451c3d2ec2abc09753be *NEWS.md
+ffe199dee7c37bf46c9b0d8a59902ee6 *R/default.R
 6c1ad28b78fcd0c080f8d34a05433460 *R/dist_bernoulli.R
 dc43681fa6e29be1aafb25d54e2c7183 *R/dist_beta.R
 a5a9d7ed647e61fb349a70b30634626f *R/dist_binomial.R
@@ -57,6 +57,7 @@ ee9e87cbb170b0c8965763f42accf30c *R/hilo.R
 c0ea658b5cab1732627259bc8885988a *R/reexports.R
 37d4f4dc622b252a55fca1cac021a874 *R/support.R
 ddaac0d88cad4a2a383f68139ddad832 *R/utils.R
+5223c30013fb84b348f7eeeeb2e179d9 *R/zzz.R
 0f8ba6cd0ae08dcd0af2681df8f0e7c2 *README.md
 7f4496b2c3ab1c9dfe9f421cced55827 *man/cdf.Rd
 e3c345c3d92b4a371a98683cf42691ae *man/covariance.Rd
@@ -156,7 +157,7 @@ f9e4e4131783f7237d4f97dfe72fbe3a *tests/testthat/test-dist-burr.R
 6de6f030c39f2525d1de82dafcc7b912 *tests/testthat/test-dist-categorical.R
 c0267778b901e4a3691a6be6e1461687 *tests/testthat/test-dist-cauchy.R
 46065b755f643e6d67e14b3dbbab2f43 *tests/testthat/test-dist-chisq.R
-ea50cfd388bf4de408725c93eff50d33 *tests/testthat/test-dist-convolved.R
+54dbb2f90426823daf50641f9946bc48 *tests/testthat/test-dist-convolved.R
 c2bc05c26f197ef3e2d532f76e6dcd16 *tests/testthat/test-dist-degenerate.R
 2e3b895d8357040d844dd910ee8a3f5b *tests/testthat/test-dist-dirichlet.R
 1a43b2c7b3a8d43de284e9b6ffc01fd8 *tests/testthat/test-dist-exponential.R
